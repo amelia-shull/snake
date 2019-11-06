@@ -101,6 +101,7 @@ Since the client doesn’t contain any game logic, this will limit potential che
 ### Database Schema
 
 The `users` table will store all registered users along with their highest score and total kill count. 
+
 | users                         |
 |-------------------------------|
 | **`id`** `int`                |
@@ -111,6 +112,7 @@ The `users` table will store all registered users along with their highest score
 | **`kills`** `int`             |
 
 The `playerScores` table will store all scores that players choose to publish. The userID will link to registered users, but the username is the name the player gives on receiving the score (they do not have to be registered).
+
 | playerScores                 |
 |------------------------------|
 | **`id`** `int`               |
