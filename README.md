@@ -68,6 +68,14 @@ Websocket will connect when the client opens the webpage and send data on the me
 
 The server will apply the users move to the next change in the game state and respond with the updated state of the game.
 
+### Endpoints
+Aside from playing the game itself, users can query our api to get information about other players or scores by using the following endpoints:
+
+**`GET` v1/api/users/{email}:** Returns the user profile with the given email in json.
+
+**`GET` v1/api/scores/{n}:** Returns the top n scores along with the username of the player in json.
+
+
 ### Game State
 The state of the game will be calculated and stored in the server. The client simply sends any user actions over websockets. The server will store the game state in an object containing the overall state of the game, and the positions and directions of the snakes and the position of the remaining food. 10 times per second the server will update the game state and send the new state to the client-side to render. Here is an example of the game state:
 
@@ -91,16 +99,20 @@ Since the client doesn’t contain any game logic, this will limit potential che
 
 ### Database Schema
 
+The `users` table will store all registered users along with their highest score and total kill count. 
+| users                         |
+|-------------------------------|
+| **`id`** `int`                |
+| **`email`** `varchar(320)`    |
+| **`username`** `varchar(255)` |
+| **`passhash`** `varchar(128)` |
+| **`highScore`** `int`         |
+| **`kills`** `int`             |
+
+The `playerScores` table will store all scores that players choose to publish. The userID will link to registered users, but the username is the name the player gives on receiving the score (they do not have to be registered).
 | playerScores                 |
 |------------------------------|
 | **`id`** `int`               |
 | **`userId`** `int`           |
 | **`username`** `varchar(30)` |
-| **`highScore`** `int`        |
-
-| killCounts                   |
-|------------------------------|
-| **`id`** `int`               |
-| **`userId`** `int`           |
-| **`username`** `varchar(30)` |
-| **`kills`** `int`            |
+| **`score`** `int`            |
