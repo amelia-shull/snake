@@ -72,8 +72,8 @@ The state of the game will be calculated and stored in the server. The client si
 
 ```
 {
-	gameState: “onGoing” | “p1” | “p2” | “tie”,
-	p1: {
+  gameState: “onGoing” | “p1” | “p2” | “tie”,
+  p1: {
     body:[{x, y}, {x, y}],
     direction: “left” | “right” | “up” | “down”
   }, 
