@@ -1,5 +1,6 @@
 # Snake!
 INFO 441 Final Project
+
 Amelia Shull and Kateka Seth
 
 ## Project Proposal
