@@ -89,3 +89,17 @@ The state of the game will be calculated and stored in the server. The client si
 Since the client doesn’t contain any game logic, this will limit potential cheating. 
 
 ### Database Schema
+
+| playerScores                 |
+|------------------------------|
+| **`id`** `int`               |
+| **`userId`** `int`           |
+| **`username`** `varchar(30)` |
+| **`highScore`** `int`        |
+
+| killCounts                   |
+|------------------------------|
+| **`id`** `int`               |
+| **`userId`** `int`           |
+| **`username`** `varchar(30)` |
+| **`kills`** `int`            |
