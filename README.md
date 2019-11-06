@@ -45,8 +45,8 @@ Websocket will connect when the client opens the webpage and send data on the me
 **Enter game action:**
 ```
 {
-	action: “enterGame”,
-	gameType: “singlePlayer” | “twoPerson”
+  action: “enterGame”,
+  gameType: “singlePlayer” | “twoPerson”
 }
 ```
 **Responses:**
@@ -57,8 +57,8 @@ Websocket will connect when the client opens the webpage and send data on the me
 **Move action:**
 ```
 {
-	action: “move”,
-	gameType: “left” | “right” | “up” | “down”
+  action: “move”,
+  gameType: “left” | “right” | “up” | “down”
 }
 ```
 **Responses:**
