@@ -1,9 +1,14 @@
 import React from 'react';
 import '../pixel.css';
-export default function Game() {
+export default function Game({globalState}) {
+    const {
+        username,
+        nickName
+    } = globalState;
+
     return (
         <div>
-            GAME PLAY
+            Welcome {nickName ? nickName : username}!
         </div>
     )
 }

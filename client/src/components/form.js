@@ -13,8 +13,8 @@ export function Form({children}) {
 export function Input({label, setInputText}) {
     return (
         <div className="form-group d-flex align-items-center justify-content-between">
-            <label for="default" className="mr-3">{label + ": "}</label>
-            <input id="default" type="text" className="form-control w-75" />
+            <label htmlFor="default" className="mr-3">{label + ": "}</label>
+            <input id="default" onChange={(e) => setInputText(e.target.value)} type="text" className="form-control w-75" />
         </div>
     )
 }

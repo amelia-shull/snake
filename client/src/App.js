@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="bg-secondary">
       {view === WELCOME && (<WelcomePage globalState={globalState}/>)}
-      {view === GAME && (<Game/>)}
+      {view === GAME && (<Game globalState={globalState}/>)}
     </div>
   );
 }

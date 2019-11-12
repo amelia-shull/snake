@@ -66,7 +66,7 @@ function Guest({globalState}) {
 
     function playAsGuest() {
         setView(GAME)
-        setNickName()
+        setNickName(inputText)
     }
 }
 
@@ -76,9 +76,11 @@ function Login({globalState}) {
         setUsername
     } = globalState
 
+    const [inputText, setInputText] = useState("")
+
     return (
         <Form>
-            <Input label="Username"/>
+            <Input setInputText={setInputText} label="Username"/>
             <Input label="Password"/>
             <Button onClick={playAsUser}>Login</Button>
         </Form>
@@ -86,7 +88,7 @@ function Login({globalState}) {
 
     function playAsUser() {
         setView(GAME)
-        setUsername()
+        setUsername(inputText)
     }
 }
 
@@ -96,9 +98,11 @@ function Signup({globalState}) {
         setUsername
     } = globalState
 
+    const [inputText, setInputText] = useState("")
+
     return (
         <Form>
-            <Input label="Username"/>
+            <Input setInputText={setInputText} label="Username"/>
             <Input label="Password"/>
             <Button onClick={createAccount}>Create Account</Button>
         </Form>
@@ -106,6 +110,6 @@ function Signup({globalState}) {
 
     function createAccount() {
         setView(GAME)
-        setUsername()
+        setUsername(inputText)
     }
 }
