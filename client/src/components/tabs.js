@@ -29,23 +29,3 @@ export function Tab({children}) {
         </div>
     )
 }
-
-
-/*
-            <div className="card center-vertical-absolute center-horizontal-absolute">
-                <div className="card-header">
-                    Welcome to Snake!
-                </div>
-                <div className="card-body">
-                    <div className="form-group d-flex align-items-center justify-content-between">
-                        <label htmlFor="default" className="mr-3">Enter a username: </label>
-                        <input id="default" type="text" className="form-control w-75" />
-                    </div>
-                    <div className="d-flex justify-content-end mt-3">
-                        <button className="btn btn-sm mr-2 btn-primary border-dark"type="button" onClick={() => setView("game")}>
-                            <span className="btn-text">OK</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-*/
