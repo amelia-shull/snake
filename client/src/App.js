@@ -2,7 +2,7 @@ import React,  { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './pixel.css';
 import WelcomePage from './components/welcome-page';
-import Game from './components/game';
+import GamePage from './components/game-page';
 
 const constants = require('./constants');
 
@@ -37,7 +37,7 @@ function App() {
     <div className="bg-secondary">
       <div style={styleApp}>
         {view === WELCOME && (<WelcomePage globalState={globalState}/>)}
-        {view === GAME && (<Game globalState={globalState}/>)}
+        {view === GAME && (<GamePage globalState={globalState}/>)}
       </div>
     </div>
   );

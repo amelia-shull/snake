@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody } from './card';
 import { Gameplay } from '../gameplay/gameplay';
 
 
-export default function Game({globalState}) {
+export default function GamePage({globalState}) {
     const {
         username,
         nickName
