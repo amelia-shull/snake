@@ -1,4 +1,6 @@
 import React,  { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
+import './pixel.css';
 import WelcomePage from './components/welcome-page';
 import Game from './components/game';
 
@@ -9,6 +11,12 @@ const {
   WELCOME
 } = constants.MAIN_VIEWS
 
+const styleApp = {
+  display: "flex",
+  height: "100vh",
+  alignItems: "center",
+  justifyContent: "center"
+}
 
 
 function App() {
@@ -27,8 +35,10 @@ function App() {
 
   return (
     <div className="bg-secondary">
-      {view === WELCOME && (<WelcomePage globalState={globalState}/>)}
-      {view === GAME && (<Game globalState={globalState}/>)}
+      <div style={styleApp}>
+        {view === WELCOME && (<WelcomePage globalState={globalState}/>)}
+        {view === GAME && (<Game globalState={globalState}/>)}
+      </div>
     </div>
   );
 }
