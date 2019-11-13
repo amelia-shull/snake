@@ -1,6 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../pixel.css';
 
 export function TabMenu({children}) {
     return (

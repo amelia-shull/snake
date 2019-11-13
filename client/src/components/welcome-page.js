@@ -1,8 +1,7 @@
 import React,  { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../pixel.css';
 import { TabMenu, TabMenuItem, Tab } from './tabs';
-import { Form, Input, Button } from './form';
+import { Form, Input, Button, SecureInput } from './form';
+import { Card, CardHeader, CardBody } from './card';
 
 const constants = require('../constants.js');
 
@@ -18,33 +17,40 @@ export default function WelcomePage({globalState}) {
     const [tabSelection, setTabSelection] = useState(GUEST)
    
     return (
-        <div>
-            <TabMenu>
-                <TabMenuItem onClick={() => setTabSelection(GUEST)} active={tabSelection === GUEST}>
-                    Play as Guest
-                </TabMenuItem>
-                <TabMenuItem onClick={() => setTabSelection(LOGIN)} active={tabSelection === LOGIN}>
-                    Login
-                </TabMenuItem>
-                <TabMenuItem onClick={() => setTabSelection(SIGNUP)} active={tabSelection === SIGNUP}>
-                    Signup
-                </TabMenuItem>
-            </TabMenu>
-            {tabSelection === GUEST && (
-                <Tab>
-                    <Guest globalState={globalState}/>
-                </Tab>
-            )}
-            {tabSelection === LOGIN && (
-                <Tab>
-                    <Login globalState={globalState}/>
-                </Tab>
-            )}
-            {tabSelection === SIGNUP && (
-                <Tab>
-                    <Signup globalState={globalState}/>
-                </Tab>
-            )}
+        <div style={{width: "50vw"}}>
+            <Card>
+                <CardHeader>
+                    Welcome to Snake!
+                </CardHeader>
+                <CardBody>
+                    <TabMenu>
+                        <TabMenuItem onClick={() => setTabSelection(GUEST)} active={tabSelection === GUEST}>
+                            Play as Guest
+                        </TabMenuItem>
+                        <TabMenuItem onClick={() => setTabSelection(LOGIN)} active={tabSelection === LOGIN}>
+                            Login
+                        </TabMenuItem>
+                        <TabMenuItem onClick={() => setTabSelection(SIGNUP)} active={tabSelection === SIGNUP}>
+                            Signup
+                        </TabMenuItem>
+                    </TabMenu>
+                    {tabSelection === GUEST && (
+                        <Tab>
+                            <Guest globalState={globalState}/>
+                        </Tab>
+                    )}
+                    {tabSelection === LOGIN && (
+                        <Tab>
+                            <Login globalState={globalState}/>
+                        </Tab>
+                    )}
+                    {tabSelection === SIGNUP && (
+                        <Tab>
+                            <Signup globalState={globalState}/>
+                        </Tab>
+                    )}
+                </CardBody>
+            </Card>
         </div>
     )
 }
@@ -81,7 +87,7 @@ function Login({globalState}) {
     return (
         <Form>
             <Input setInputText={setInputText} label="Username"/>
-            <Input label="Password"/>
+            <SecureInput label="Password"/>
             <Button onClick={playAsUser}>Login</Button>
         </Form>
     )
@@ -103,7 +109,8 @@ function Signup({globalState}) {
     return (
         <Form>
             <Input setInputText={setInputText} label="Username"/>
-            <Input label="Password"/>
+            <SecureInput label="Password"/>
+            <SecureInput label="Type password again"/>
             <Button onClick={createAccount}>Create Account</Button>
         </Form>
     )

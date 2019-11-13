@@ -1,6 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../pixel.css';
 
 export function Form({children}) {
     return (
@@ -17,6 +15,15 @@ export function Input({label, setInputText}) {
             <input id="default" onChange={(e) => setInputText(e.target.value)} type="text" className="form-control w-75" />
         </div>
     )
+}
+
+export function SecureInput({label}) {
+    return (
+        <div className="form-group d-flex align-items-center justify-content-between">
+            <label htmlFor="default" className="mr-3">{label + ": "}</label>
+            <input id="default" type="password" className="form-control w-75" />
+        </div>
+    )  
 }
 
 export function Button({children, onClick}) {
