@@ -17,7 +17,7 @@ export default function WelcomePage({globalState}) {
     const [tabSelection, setTabSelection] = useState(GUEST)
    
     return (
-        <div style={{width: "50vw"}}>
+        <div style={{width: "40vw"}}>
             <Card>
                 <CardHeader>
                     Welcome to Snake!
