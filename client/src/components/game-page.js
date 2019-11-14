@@ -6,8 +6,11 @@ import { Gameplay } from '../gameplay/gameplay';
 export default function GamePage({globalState}) {
     const {
         username,
-        nickName
+        nickName,
+        ws
     } = globalState;
+
+    ws.sendUser(username ? username : "guest")
 
     return (
         <div>

@@ -2,8 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { WebSocketClient } from './web-socket';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const ws = new WebSocketClient()
+ws.connect()
+
+ReactDOM.render(<App ws={ws}/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

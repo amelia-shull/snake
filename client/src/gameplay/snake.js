@@ -1,6 +1,5 @@
 export class Snake {
     constructor(p5) {
-        console.log(p5)
         this.body = [];
         this.body[0] = p5.createVector(0, 0);
         this.xDir = 0;
