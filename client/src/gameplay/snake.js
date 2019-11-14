@@ -7,14 +7,6 @@ export class Snake {
         this.p5 = p5;
     }
  
-    update() {
-        let head = this.body[this.body.length - 1].copy();
-        this.body.shift();
-        head.x += this.xDir;
-        head.y += this.yDir;
-        this.body.push(head);
-    }
- 
     show(p5) {
         this.body.forEach(function(element) {
             p5.fill(0);

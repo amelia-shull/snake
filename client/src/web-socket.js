@@ -1,9 +1,9 @@
- 
-
+import { GamePlay } from './gameplay/gameplay';
 
 export class WebSocketClient {
     constructor() {
         this.ws = new WebSocket("ws://localhost:8844/")
+        this.updateGameState = undefined
     }
 
     connect() {
@@ -15,14 +15,24 @@ export class WebSocketClient {
         }
         this.ws.onmessage = event => {
             let data = event.data;
-            console.log(data)
+            this.updateGameState(data)
         }
     }
 
-    sendUser(user) {
+    setUpdateGameStateFunc(updateGameState) {
+        this.updateGameState = updateGameState
+    }
+
+    startGame() {
         this.ws.send(JSON.stringify({
-            action: "sendUser",
-            data: user
+            action: "startGame"
+        }))
+    }
+
+    sendMove(move) {
+        this.ws.send(JSON.stringify({
+            action: "sendMove",
+            data: move
         }))
     }
 }

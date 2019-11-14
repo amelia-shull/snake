@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -49,12 +50,28 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		if res.Action == "sendUser" {
-			if res.Data == "guest" {
-				game := NewGame()
-				ws.WriteMessage(websocket.TextMessage, game)
-				// every .5 second call update and write message
-			}
+		ticker := time.NewTicker(1 * time.Second)
+		quit := make(chan struct{})
+
+		if res.Action == "startGame" {
+			game := NewGame()
+			ws.WriteMessage(websocket.TextMessage, game)
+			go func(game []byte, ws *websocket.Conn) {
+				for {
+					select {
+					case <-ticker.C:
+						game = UpdateGame()
+						ws.WriteMessage(websocket.TextMessage, game)
+						log.Print("send game status")
+					case <-quit:
+						// Figure out how and where to quit, when game isn't currently being played
+						ticker.Stop()
+						return
+					}
+				}
+			}(game, ws)
+		} else if res.Action == "sendMove" {
+			UpdateDirection(res.Data)
 		}
 		log.Printf("Message recieved: Type: %d, Messge: %s", messageType, message)
 	}

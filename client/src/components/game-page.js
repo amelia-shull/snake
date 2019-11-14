@@ -10,7 +10,7 @@ export default function GamePage({globalState}) {
         ws
     } = globalState;
 
-    ws.sendUser(username ? username : "guest")
+    ws.startGame()
 
     return (
         <div>
@@ -19,7 +19,7 @@ export default function GamePage({globalState}) {
                     Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
                 </CardHeader>
                 <CardBody>
-                    <Gameplay/>
+                    <Gameplay ws={ws}/>
                 </CardBody>
             </Card>
         </div>
