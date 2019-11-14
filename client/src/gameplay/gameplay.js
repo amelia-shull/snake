@@ -40,6 +40,10 @@ export function Gameplay({ws}) {
             p5.noStroke();
             p5.rect(element.x, element.y, 1, 1);
         })
+
+        p5.fill("#324cdd");
+        p5.noStroke();
+        p5.rect(parsedState.food.x, parsedState.food.y, 1, 1);
     }
 
     

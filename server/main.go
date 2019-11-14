@@ -50,7 +50,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		ticker := time.NewTicker(1 * time.Second)
+		ticker := time.NewTicker(250 * time.Millisecond)
 		quit := make(chan struct{})
 
 		if res.Action == "startGame" {
@@ -60,7 +60,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 				for {
 					select {
 					case <-ticker.C:
-						game = UpdateGame()
+						game, active := UpdateGame()
+						if !active {
+							close(quit)
+						}
 						ws.WriteMessage(websocket.TextMessage, game)
 						log.Print("send game status")
 					case <-quit:

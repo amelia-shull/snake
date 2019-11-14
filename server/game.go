@@ -1,6 +1,9 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"math/rand"
+)
 
 // GameData holds all the data of a game
 type GameData struct {
@@ -33,14 +36,18 @@ const size = 40
 // NewGame sets up a new game
 func NewGame() []byte {
 	player := Player{Body: []Point{Point{0, 0}, Point{1, 0}, Point{2, 0}, Point{3, 0}, Point{4, 0}}, Direction: down}
-	game = GameData{"active", player, Point{50, 50}, size}
+	game = GameData{"active", player, generateFood(), size}
 
 	gameByte, _ := json.Marshal(game)
 	return gameByte
 }
 
+func generateFood() Point {
+	return Point{rand.Intn(39), rand.Intn(39)}
+}
+
 // UpdateGame updates the game
-func UpdateGame() []byte {
+func UpdateGame() ([]byte, bool) {
 	body := game.Player.Body
 	for i := len(body) - 1; i >= 1; i-- {
 		body[i] = body[i-1]
@@ -57,14 +64,17 @@ func UpdateGame() []byte {
 	game.Player.Body = body
 
 	// Doesn't work for corners
-	if body[0].X == 0 && game.Player.Direction == left {
-		game.Player.Direction = up
-	} else if body[0].X == size && game.Player.Direction == right {
-		game.Player.Direction = down
-	} else if body[0].Y == 0 && game.Player.Direction == up {
-		game.Player.Direction = right
-	} else if body[0].Y == size && game.Player.Direction == down {
-		game.Player.Direction = left
+	if body[0].X == -1 && game.Player.Direction == left {
+		game.Status = "over"
+	}
+	if body[0].X == size && game.Player.Direction == right {
+		game.Status = "over"
+	}
+	if body[0].Y == -1 && game.Player.Direction == up {
+		game.Status = "over"
+	}
+	if body[0].Y == size && game.Player.Direction == down {
+		game.Status = "over"
 	}
 
 	for i := 0; i < len(body); i++ {
@@ -75,7 +85,7 @@ func UpdateGame() []byte {
 		}
 	}
 	gameByte, _ := json.Marshal(game)
-	return gameByte
+	return gameByte, game.Status == "active"
 }
 
 func (p1 *Point) equals(p2 *Point) bool {
