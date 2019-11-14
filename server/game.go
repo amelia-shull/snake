@@ -49,6 +49,7 @@ func generateFood() Point {
 // UpdateGame updates the game
 func UpdateGame() ([]byte, bool) {
 	body := game.Player.Body
+	last := body[len(body)-1]
 	for i := len(body) - 1; i >= 1; i-- {
 		body[i] = body[i-1]
 	}
@@ -61,9 +62,8 @@ func UpdateGame() ([]byte, bool) {
 	} else { // right
 		body[0].X = body[0].X + 1
 	}
-	game.Player.Body = body
 
-	// Doesn't work for corners
+	// Game over if touch edge
 	if body[0].X == -1 && game.Player.Direction == left {
 		game.Status = "over"
 	}
@@ -84,6 +84,13 @@ func UpdateGame() ([]byte, bool) {
 			}
 		}
 	}
+
+	if body[0].equals(&game.Food) {
+		body = append(body, last)
+		game.Food = generateFood()
+	}
+
+	game.Player.Body = body
 	gameByte, _ := json.Marshal(game)
 	return gameByte, game.Status == "active"
 }
