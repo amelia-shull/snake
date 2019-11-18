@@ -1,16 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"math/rand"
 )
 
 // GameData holds all the data of a game
 type GameData struct {
-	Status string `json:"status"`
-	Player Player `json:"player"`
-	Food   Point  `json:"food"`
-	Size   int    `json:"size"`
+	Status      string   `json:"status"`
+	Players     []Player `json:"players"`
+	Food        Point    `json:"food"`
+	Size        int      `json:"size"`
+	FinalStatus string   `json:"finalStatus"`
 }
 
 // Player represents the location of a player
@@ -25,8 +25,6 @@ type Point struct {
 	Y int `json:"y"`
 }
 
-var game GameData
-
 const up = "up"
 const down = "down"
 const left = "left"
@@ -34,12 +32,17 @@ const right = "right"
 const size = 40
 
 // NewGame sets up a new game
-func NewGame() []byte {
-	player := Player{Body: []Point{Point{0, 0}, Point{1, 0}, Point{2, 0}, Point{3, 0}, Point{4, 0}}, Direction: down}
-	game = GameData{"active", player, generateFood(), size}
+func NewGame(count int) *GameData {
+	var gameData *GameData
+	player0 := Player{Body: []Point{Point{0, 0}}, Direction: down}
+	players := []Player{player0}
+	if count == 2 {
+		player1 := Player{Body: []Point{Point{size - 1, size - 1}}, Direction: up}
+		players = []Player{player0, player1}
+	}
+	gameData = &GameData{"active", players, generateFood(), size, ""}
 
-	gameByte, _ := json.Marshal(game)
-	return gameByte
+	return gameData
 }
 
 func generateFood() Point {
@@ -47,52 +50,60 @@ func generateFood() Point {
 }
 
 // UpdateGame updates the game
-func UpdateGame() ([]byte, bool) {
-	body := game.Player.Body
-	last := body[len(body)-1]
-	for i := len(body) - 1; i >= 1; i-- {
-		body[i] = body[i-1]
-	}
-	if game.Player.Direction == down {
-		body[0].Y = body[0].Y + 1
-	} else if game.Player.Direction == up {
-		body[0].Y = body[0].Y - 1
-	} else if game.Player.Direction == left {
-		body[0].X = body[0].X - 1
-	} else { // right
-		body[0].X = body[0].X + 1
-	}
+func (gameData *GameData) UpdateGame() (*GameData, bool) {
+	for index, player := range gameData.Players {
 
-	// Game over if touch edge
-	if body[0].X == -1 && game.Player.Direction == left {
-		game.Status = "over"
-	}
-	if body[0].X == size && game.Player.Direction == right {
-		game.Status = "over"
-	}
-	if body[0].Y == -1 && game.Player.Direction == up {
-		game.Status = "over"
-	}
-	if body[0].Y == size && game.Player.Direction == down {
-		game.Status = "over"
-	}
+		body := player.Body
+		last := body[len(body)-1]
 
-	for i := 0; i < len(body); i++ {
-		for j := 0; j < len(body); j++ {
-			if i != j && body[i].equals(&body[j]) {
-				game.Status = "over"
+		for i := len(body) - 1; i >= 1; i-- {
+			body[i] = body[i-1]
+		}
+		if player.Direction == down {
+			body[0].Y = body[0].Y + 1
+		} else if player.Direction == up {
+			body[0].Y = body[0].Y - 1
+		} else if player.Direction == left {
+			body[0].X = body[0].X - 1
+		} else { // right
+			body[0].X = body[0].X + 1
+		}
+
+		// Game over if touch edge
+		if body[0].X == -1 && player.Direction == left {
+			gameData.Status = "over"
+			gameData.FinalStatus = string(index) + " loses"
+		}
+		if body[0].X == size && player.Direction == right {
+			gameData.Status = "over"
+			gameData.FinalStatus = string(index) + " loses"
+		}
+		if body[0].Y == -1 && player.Direction == up {
+			gameData.Status = "over"
+			gameData.FinalStatus = string(index) + " loses"
+		}
+		if body[0].Y == size && player.Direction == down {
+			gameData.Status = "over"
+			gameData.FinalStatus = string(index) + " loses"
+		}
+
+		for i := 0; i < len(body); i++ {
+			for j := 0; j < len(body); j++ {
+				if i != j && body[i].equals(&body[j]) {
+					gameData.Status = "over"
+					gameData.FinalStatus = string(index) + " loses"
+				}
 			}
 		}
-	}
 
-	if body[0].equals(&game.Food) {
-		body = append(body, last)
-		game.Food = generateFood()
-	}
+		if body[0].equals(&gameData.Food) {
+			body = append(body, last)
+			gameData.Food = generateFood()
+		}
 
-	game.Player.Body = body
-	gameByte, _ := json.Marshal(game)
-	return gameByte, game.Status == "active"
+		gameData.Players[index].Body = body
+	}
+	return gameData, gameData.Status == "active"
 }
 
 func (p1 *Point) equals(p2 *Point) bool {
@@ -100,6 +111,6 @@ func (p1 *Point) equals(p2 *Point) bool {
 }
 
 // UpdateDirection updates the direction
-func UpdateDirection(direction string) {
-	game.Player.Direction = direction
+func (gameData *GameData) UpdateDirection(index int, direction string) {
+	gameData.Players[index].Direction = direction
 }

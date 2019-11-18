@@ -3,7 +3,7 @@ import { GamePlay } from './gameplay/gameplay';
 export class WebSocketClient {
     constructor() {
         this.ws = new WebSocket("ws://localhost:8844/")
-        this.updateGameState = undefined
+        this.updateGameState = () => {}
     }
 
     connect() {
@@ -15,7 +15,11 @@ export class WebSocketClient {
         }
         this.ws.onmessage = event => {
             let data = event.data;
-            this.updateGameState(data)
+            if (data.startsWith("Update:")) {
+                console.log(data)
+            } else {
+                this.updateGameState(data)
+            }
         }
     }
 
@@ -23,9 +27,10 @@ export class WebSocketClient {
         this.updateGameState = updateGameState
     }
 
-    startGame() {
+    startGame(gameType) {
         this.ws.send(JSON.stringify({
-            action: "startGame"
+            action: "startGame",
+            data: gameType
         }))
     }
 

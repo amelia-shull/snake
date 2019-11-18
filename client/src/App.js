@@ -33,7 +33,7 @@ function App({ws}) {
     setNickName,
     ws
   }
-
+  
   return (
     <div className="bg-secondary">
       <div style={styleApp}>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
 
-export function Gameplay({ws}) {
+export function Gameplay({ws, setGameOver, setPlaying}) {
     const [gameState, setGameState] = useState(undefined);
     var parsedState;
     ws.setUpdateGameStateFunc(setGameState)
@@ -9,6 +9,7 @@ export function Gameplay({ws}) {
     var w;
     var h;
     var size = 15;
+
     
     if (gameState != undefined) {
         parsedState = JSON.parse(gameState)
@@ -17,11 +18,16 @@ export function Gameplay({ws}) {
             return (
                 <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
             );
+        } else {
+            setGameOver(true)
+            setPlaying(false)
         }
     }
     
     return (
-        <div>NO</div>
+        <div style={{width: "600px", height:"600px", backgroundColor: "220"}}>
+            Waiting for other player...
+        </div>
     );
     
     
@@ -35,15 +41,17 @@ export function Gameplay({ws}) {
         p5.scale(size)
         p5.background(220);
 
-        parsedState.player.body.forEach(function(element) {
-            p5.fill(0);
-            p5.noStroke();
-            p5.rect(element.x, element.y, 1, 1);
-        })
-
         p5.fill("#324cdd");
         p5.noStroke();
         p5.rect(parsedState.food.x, parsedState.food.y, 1, 1);
+
+        parsedState.players.forEach((player, i) => {
+            player.body.forEach((point) => {
+                p5.fill(0);
+                p5.noStroke();
+                p5.rect(point.x, point.y, 1, 1);
+            })
+        })
     }
 
     
