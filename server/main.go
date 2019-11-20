@@ -87,6 +87,7 @@ func updateDirection(game *Game, ws *websocket.Conn, direction string) {
 func updateWaitingRoom(ws *websocket.Conn) {
 	if len(waitingRoom) >= 1 {
 		// Need to remove player from waiting room
+		waitingRoom = append(waitingRoom[:0], waitingRoom[1:]...)
 		player1 := waitingRoom[0]
 		playerList := []*websocket.Conn{player1, ws}
 		newGame := &Game{playerList, NewGame(2)}
