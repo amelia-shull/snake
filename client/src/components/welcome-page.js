@@ -17,7 +17,7 @@ export default function WelcomePage({globalState}) {
     const [tabSelection, setTabSelection] = useState(GUEST)
    
     return (
-        <div style={{width: "50vw"}}>
+        <div style={{width: "40vw"}}>
             <Card>
                 <CardHeader>
                     Welcome to Snake!
@@ -58,7 +58,8 @@ export default function WelcomePage({globalState}) {
 function Guest({globalState}) {
     const {
         setView,
-        setNickName
+        setNickName,
+        ws
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -66,7 +67,7 @@ function Guest({globalState}) {
     return (
         <Form>
             <Input setInputText={setInputText} label="Nickname"/>
-            <Button onClick={playAsGuest}>Play</Button>
+            <Button onClick={playAsGuest}>Go</Button>
         </Form>
     )
 
@@ -79,7 +80,8 @@ function Guest({globalState}) {
 function Login({globalState}) {
     const {
         setView,
-        setUsername
+        setUsername,
+        ws
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -101,7 +103,8 @@ function Login({globalState}) {
 function Signup({globalState}) {
     const {
         setView,
-        setUsername
+        setUsername,
+        ws
     } = globalState
 
     const [inputText, setInputText] = useState("")

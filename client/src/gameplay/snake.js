@@ -1,19 +1,10 @@
 export class Snake {
     constructor(p5) {
-        console.log(p5)
         this.body = [];
         this.body[0] = p5.createVector(0, 0);
         this.xDir = 0;
         this.yDir = 0;
         this.p5 = p5;
-    }
- 
-    update() {
-        let head = this.body[this.body.length - 1].copy();
-        this.body.shift();
-        head.x += this.xDir;
-        head.y += this.yDir;
-        this.body.push(head);
     }
  
     show(p5) {

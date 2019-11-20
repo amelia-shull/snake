@@ -19,7 +19,7 @@ const styleApp = {
 }
 
 
-function App() {
+function App({ws}) {
   const [view, setView] = useState(WELCOME);
   const [username, setUsername] = useState(undefined);
   const [nickName, setNickName] = useState(undefined);
@@ -30,9 +30,10 @@ function App() {
     username,
     setUsername,
     nickName,
-    setNickName
+    setNickName,
+    ws
   }
-
+  
   return (
     <div className="bg-secondary">
       <div style={styleApp}>

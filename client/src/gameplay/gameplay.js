@@ -1,66 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
-import { Snake } from './snake';
 
-export function Gameplay() {
+export function Gameplay({ws, setGameOver, setPlaying}) {
+    const [gameState, setGameState] = useState(undefined);
+    var parsedState;
+    ws.setUpdateGameStateFunc(setGameState)
 
-    var snake;
-    var food;
     var w;
     var h;
-    var size = 10;
+    var size = 15;
 
+    
+    if (gameState != undefined) {
+        parsedState = JSON.parse(gameState)
+        console.log(parsedState)
+        if (parsedState.status === "active") {
+            return (
+                <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
+            );
+        } else {
+            setGameOver(true)
+            setPlaying(false)
+        }
+    }
+    
     return (
-        <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
+        <div style={{width: "600px", height:"600px", backgroundColor: "220"}}>
+            Waiting for other player...
+        </div>
     );
+    
     
     function setup(p5, canvasParentRef) {
         p5.createCanvas(600, 600).parent(canvasParentRef);
         w = p5.floor(p5.width / size);
         h = p5.floor(p5.width / size);
-        p5.frameRate(8);
-        snake = new Snake(p5);
-        generateFood(p5);
     }
     
     function draw(p5) {
         p5.scale(size)
         p5.background(220);
-    
-        if (snake.eat(food)) {
-            generateFood(p5);
-        }
-    
-        if (snake.dead()) {
-            p5.print("END");
-            p5.background(200, 0, 0);
-            p5.noLoop();
-        }
-    
-        snake.update();
-        snake.show(p5);
-    
-        // draw food
+
+        p5.fill("#324cdd");
         p5.noStroke();
-        p5.fill(255, 0, 0);
-        p5.rect(food.x, food.y, 1, 1);
+        p5.rect(parsedState.food.x, parsedState.food.y, 1, 1);
+
+        parsedState.players.forEach((player, i) => {
+            player.body.forEach((point) => {
+                p5.fill(0);
+                p5.noStroke();
+                p5.rect(point.x, point.y, 1, 1);
+            })
+        })
     }
-    
-    function generateFood(p5) {
-        let x = p5.floor(p5.random(w));
-        let y = p5.floor(p5.random(h));
-        food = p5.createVector(x, y);
-    }
+
     
     function keyPressed(p5) {
         if (p5.keyCode === p5.LEFT_ARROW) {
-            snake.setDir(-1, 0);
+            ws.sendMove("left")
         } else if (p5.keyCode === p5.RIGHT_ARROW) {
-            snake.setDir(1, 0);
+            ws.sendMove("right")
         } else if (p5.keyCode === p5.UP_ARROW) {
-            snake.setDir(0, -1);
+            ws.sendMove("up")
         } else if (p5.keyCode === p5.DOWN_ARROW) {
-            snake.setDir(0, 1);
+            ws.sendMove("down")
         }
     }
 
