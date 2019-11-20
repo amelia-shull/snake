@@ -79,7 +79,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 func updateDirection(game *Game, ws *websocket.Conn, direction string) {
 	for i, playerWS := range game.Players {
 		if playerWS == ws {
-			game.GameData.Players[i].Direction = direction
+			game.GameData.UpdateDirection(i, direction)
 		}
 	}
 }

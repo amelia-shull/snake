@@ -112,12 +112,13 @@ func (p1 *Point) equals(p2 *Point) bool {
 
 // UpdateDirection updates the direction
 func (gameData *GameData) UpdateDirection(index int, direction string) {
-	cases := [][]string{[]string{"left", "right"}, []string{"up", "down"}}
-	// Test this:
+	cases := [][]string{[]string{left, right}, []string{up, down}}
 	for _, c := range cases {
 		if direction == c[0] && gameData.Players[index].Direction == c[1] ||
 			gameData.Players[index].Direction == c[0] && direction == c[1] {
 			gameData.Status = "over"
+			gameData.FinalStatus = string(index) + " loses"
+			return
 		}
 	}
 	gameData.Players[index].Direction = direction
