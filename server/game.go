@@ -116,8 +116,6 @@ func (gameData *GameData) UpdateDirection(index int, direction string) {
 	for _, c := range cases {
 		if direction == c[0] && gameData.Players[index].Direction == c[1] ||
 			gameData.Players[index].Direction == c[0] && direction == c[1] {
-			gameData.Status = "over"
-			gameData.FinalStatus = string(index) + " loses"
 			return
 		}
 	}
