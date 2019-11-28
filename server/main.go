@@ -53,6 +53,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 			if err != nil {
+				players[ws].GameData.Status = "over"
 				delete(players, ws)
 				log.Println("removing player, ws close")
 			}
