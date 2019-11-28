@@ -135,7 +135,7 @@ func (ctx *HandlerContext) SpecificSessionsHandler(w http.ResponseWriter, r *htt
 
 	// Get URL and make sure it's valid
 	url := r.URL.Path
-	if url != "/v1/sessions/mine" {
+	if url != "/sessions/mine" {
 		http.Error(w, "Access forbidden", http.StatusForbidden)
 		return
 	}

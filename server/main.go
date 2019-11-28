@@ -72,7 +72,8 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/users", ctx.UsersHandler)
-	router.HandleFunc("/signin", ctx.SignInHandler)
+	router.HandleFunc("/sessions", ctx.SessionsHandler)
+	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
 	router.HandleFunc("/", wsHandler)
 	log.Fatal(http.ListenAndServe(":8844", router))
 }

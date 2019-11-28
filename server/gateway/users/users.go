@@ -8,10 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//gravatarBasePhotoURL is the base URL for Gravatar image requests.
-//See https://id.gravatar.com/site/implement/images/ for details
-const gravatarBasePhotoURL = "https://www.gravatar.com/avatar/"
-
 //bcryptCost is the default bcrypt cost to use when hashing passwords
 var bcryptCost = 13
 
