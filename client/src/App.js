@@ -19,11 +19,12 @@ const styleApp = {
 }
 
 
-function App({ws}) {
+function App() {
   const [view, setView] = useState(WELCOME);
   const [username, setUsername] = useState(undefined);
   const [nickName, setNickName] = useState(undefined);
   const [authToken, setAuthToken] = useState(undefined);
+  const [ws, setWS] = useState(undefined);
 
   const globalState = {
     view,
@@ -33,6 +34,7 @@ function App({ws}) {
     nickName,
     setNickName,
     ws,
+    setWS,
     authToken,
     setAuthToken
   }

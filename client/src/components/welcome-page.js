@@ -2,6 +2,7 @@ import React,  { useState } from 'react';
 import { TabMenu, TabMenuItem, Tab } from './tabs';
 import { Form, Input, Button, SecureInput } from './form';
 import { Card, CardHeader, CardBody } from './card';
+import { WebSocketClient } from '../web-socket';
 import axios from 'axios';
 
 const constants = require('../constants.js');
@@ -16,6 +17,9 @@ const SIGNUP = "signup";
 
 export default function WelcomePage({globalState}) {
     const [tabSelection, setTabSelection] = useState(GUEST)
+    const {
+        setWS
+    } = globalState;
    
     return (
         <div style={{width: "40vw"}}>
@@ -37,26 +41,32 @@ export default function WelcomePage({globalState}) {
                     </TabMenu>
                     {tabSelection === GUEST && (
                         <Tab>
-                            <Guest globalState={globalState}/>
+                            <Guest globalState={globalState} connectWebSocket={connectWebSocket}/>
                         </Tab>
                     )}
                     {tabSelection === LOGIN && (
                         <Tab>
-                            <Login globalState={globalState}/>
+                            <Login globalState={globalState} connectWebSocket={connectWebSocket}/>
                         </Tab>
                     )}
                     {tabSelection === SIGNUP && (
                         <Tab>
-                            <Signup globalState={globalState}/>
+                            <Signup globalState={globalState} connectWebSocket={connectWebSocket}/>
                         </Tab>
                     )}
                 </CardBody>
             </Card>
         </div>
     )
+
+    function connectWebSocket(auth) {
+        let ws = new WebSocketClient(auth)
+        setWS(ws)
+        ws.connect()
+    }
 }
 
-function Guest({globalState}) {
+function Guest({globalState, connectWebSocket}) {
     const {
         setView,
         setNickName,
@@ -73,16 +83,16 @@ function Guest({globalState}) {
     )
 
     function playAsGuest() {
+        connectWebSocket(undefined)
         setView(GAME)
         setNickName(inputText)
     }
 }
 
-function Login({globalState}) {
+function Login({globalState, connectWebSocket}) {
     const {
         setView,
         setUsername,
-        ws,
         setAuthToken
     } = globalState
 
@@ -107,18 +117,23 @@ function Login({globalState}) {
             creds,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
-            setAuthToken(response.headers.authorization)
+            let auth = response.headers.authorization
+            console.log(auth)
+            setAuthToken(auth)
+            connectWebSocket(auth)
+            setView(GAME)
+            setUsername(inputText)
         })
-        setView(GAME)
-        setUsername(inputText)
+        .catch(err =>{
+            console.log(err)
+        })
     }
 }
 
-function Signup({globalState}) {
+function Signup({globalState, connectWebSocket}) {
     const {
         setView,
         setUsername,
-        ws,
         setAuthToken
     } = globalState
 
@@ -146,9 +161,14 @@ function Signup({globalState}) {
              newUser,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
-            setAuthToken(response.headers.authorization)
+            let auth = response.headers.authorization
+            setAuthToken(auth)
+            connectWebSocket(auth)
+            setView(GAME)
+            setUsername(inputText)
         })
-        setView(GAME)
-        setUsername(inputText)
+        .catch(err =>{
+            console.log(err)
+        })
     }
 }
