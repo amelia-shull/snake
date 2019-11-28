@@ -27,7 +27,7 @@ type Game struct {
 	GameData *GameData
 }
 
-var waitingRoom []*websocket.Conn
+var waitingRoom WaitingRoom
 var players = make(map[*websocket.Conn]*Game)
 
 // ws -> game
@@ -83,12 +83,15 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			log.Println(err.Error())
-			if err.Error() == "websocket: close 1001 (going away)" {
-
+			log.Println(err)
+			if err != nil {
+				players[ws].GameData.Status = "over"
+				delete(players, ws)
+				log.Println("removing player, ws close")
 			}
 			return
 		}
@@ -100,7 +103,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if res.Action == "startGame" {
-			if res.Data == "single" {
+			if res.Data == "single" { // guest or single-player game
 				players[ws] = &Game{[]*websocket.Conn{ws}, NewGame(1)}
 				startGame(players[ws])
 			} else { // multi
@@ -121,10 +124,8 @@ func updateDirection(game *Game, ws *websocket.Conn, direction string) {
 }
 
 func updateWaitingRoom(ws *websocket.Conn) {
-	if len(waitingRoom) >= 1 {
-		// Need to remove player from waiting room
-		waitingRoom = append(waitingRoom[:0], waitingRoom[1:]...)
-		player1 := waitingRoom[0]
+	if waitingRoom.Size() >= 1 {
+		player1 := waitingRoom.Remove()
 		playerList := []*websocket.Conn{player1, ws}
 		newGame := &Game{playerList, NewGame(2)}
 		players[player1] = newGame
@@ -132,7 +133,7 @@ func updateWaitingRoom(ws *websocket.Conn) {
 		startGame(newGame)
 	} else {
 		log.Println("Add player to waiting room")
-		waitingRoom = append(waitingRoom, ws)
+		waitingRoom.Add(ws)
 	}
 }
 
@@ -150,6 +151,9 @@ func startGame(game *Game) {
 				jsonData, _ := json.Marshal(game.GameData)
 				broadcast(game.Players, jsonData)
 				if !active {
+					for _, ws := range game.Players {
+						delete(players, ws)
+					}
 					quit <- true
 				}
 			case <-quit:
