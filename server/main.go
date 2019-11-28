@@ -107,7 +107,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if res.Action == "startGame" {
-			if res.Data == "single" || auth == nil { // guest or single-player game
+			if res.Data == "single" || auth == nil { // Force guest to play singe-player
 				players[ws] = &Game{[]*websocket.Conn{ws}, NewGame(1)}
 				startGame(players[ws])
 			} else { // multi

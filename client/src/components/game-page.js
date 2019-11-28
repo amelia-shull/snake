@@ -37,6 +37,9 @@ export default function GamePage({globalState}) {
 function WaitingRoom({setPlaying, ws, username}) {
     return (
         <div>
+            {
+                username != undefined && <p>Successfully logged in</p>
+            }
             <p>Click button when you are ready to play!</p>
             <Button onClick={() => startGame("single")}>Single-player</Button>
             {
