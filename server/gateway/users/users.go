@@ -1,10 +1,7 @@
 package users
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
-	"net/mail"
 	"reflect"
 	"strings"
 
@@ -21,21 +18,18 @@ var bcryptCost = 13
 //User represents a user account in the database
 type User struct {
 	ID       int64  `json:"id"`
-	Email    string `json:"-"` //never JSON encoded/decoded
 	PassHash []byte `json:"-"` //never JSON encoded/decoded
 	UserName string `json:"userName"`
-	PhotoURL string `json:"photoURL"`
 }
 
 //Credentials represents user sign-in credentials
 type Credentials struct {
-	Email    string `json:"email"`
+	UserName string `json:"userName"`
 	Password string `json:"password"`
 }
 
 //NewUser represents a new user signing up for an account
 type NewUser struct {
-	Email        string `json:"email"`
 	Password     string `json:"password"`
 	PasswordConf string `json:"passwordConf"`
 	UserName     string `json:"userName"`
@@ -50,27 +44,21 @@ func (u *User) Equals(u2 *User) bool {
 //any of the validation rules fail, or nil if its valid
 func (nu *NewUser) Validate() error {
 	//validate the new user according to these rules:
-	//- Email field must be a valid email address (hint: see mail.ParseAddress)
 	//- Password must be at least 6 characters
 	//- Password and PasswordConf must match
 	//- UserName must be non-zero length and may not contain spaces
-	_, err := mail.ParseAddress(nu.Email)
-	if err != nil {
-		return err
-	}
-
 	if len(nu.Password) < 6 {
-		err = fmt.Errorf("passwords must be at least 6 characters")
+		err := fmt.Errorf("passwords must be at least 6 characters")
 		return err
 	}
 
 	if nu.Password != nu.PasswordConf {
-		err = fmt.Errorf("passwords do not match")
+		err := fmt.Errorf("passwords do not match")
 		return err
 	}
 
 	if len(nu.UserName) == 0 || strings.Contains(nu.UserName, " ") {
-		err = fmt.Errorf("username must be non-empty and contrain no spaces")
+		err := fmt.Errorf("username must be non-empty and contrain no spaces")
 		return err
 	}
 
@@ -86,16 +74,8 @@ func (nu *NewUser) ToUser() (*User, error) {
 	//if valid, create a new *User and set the fields
 	//based on the field values in `nu`.
 	u := &User{
-		Email:    nu.Email,
 		UserName: nu.UserName,
 	}
-
-	//Set the PhotoURL field to the Gravatar PhotoURL
-	//for the user's email address.
-	hasher := md5.New()
-	email := []byte(strings.TrimSpace(strings.ToLower(nu.Email)))
-	hasher.Write(email)
-	u.PhotoURL = gravatarBasePhotoURL + hex.EncodeToString(hasher.Sum(nil))
 
 	// call .SetPassword() to set the PassHash
 	//field of the User to a hash of the NewUser.Password

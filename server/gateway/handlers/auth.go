@@ -63,46 +63,6 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	w.Write(userJSON)
 }
 
-//SignInHandler handles requests to /signin and will sign the user in the request body in.
-func (ctx *HandlerContext) SignInHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
-		return
-	}
-
-	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
-		http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)
-		return
-	}
-
-	if r.Body == nil {
-		http.Error(w, "Request is nil", http.StatusUnsupportedMediaType)
-		return
-	}
-
-	creds := &users.Credentials{}
-	dec := json.NewDecoder(r.Body)
-	// check that request body can be encoded into creds struct
-	if err := dec.Decode(creds); err != nil {
-		http.Error(w, "Decoding failed", http.StatusBadRequest)
-		return
-	}
-	user, err := ctx.UserStore.ValidateSignIn(creds)
-	if err != nil {
-		http.Error(w, "Sign in failed", http.StatusBadRequest)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
-	// status code http.StatusCreated
-	w.WriteHeader(http.StatusCreated)
-	// encode new user profile as json in response body
-	userJSON, err := json.Marshal(user)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
-	w.Write(userJSON)
-}
-
 // SessionsHandler handles requests for the sessions rescource and allows
 // clients to begin a new session using an existing user's credentials
 func (ctx *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +90,7 @@ func (ctx *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	// Find user profile from the store using email
-	user, err := ctx.UserStore.GetByEmail(creds.Email)
+	user, err := ctx.UserStore.GetByUserName(creds.UserName)
 
 	if err != nil {
 		_, _ = bcrypt.GenerateFromPassword([]byte("password"), 13)
@@ -155,16 +115,6 @@ func (ctx *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Error beginning a session", http.StatusConflict)
 		return
 	}
-
-	// Put signins into new db
-	stmt := "insert into signins(user_id, log_time, ip) values (?,?,?)"
-	ip := r.Header.Get("X-Forwarded-For")
-	if ip == "" {
-		ip = r.RemoteAddr
-	} else {
-		ip = strings.Split(ip, ", ")[0]
-	}
-	_, _ = ctx.UserStore.Db.Exec(stmt, sessionState.User.ID, sessionState.Time, ip)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

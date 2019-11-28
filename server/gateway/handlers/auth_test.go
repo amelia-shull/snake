@@ -21,7 +21,6 @@ func TestUsersHandler(t *testing.T) {
 	expectedUser := &users.User{
 		ID:       1,
 		UserName: "userName",
-		PhotoURL: "https://www.gravatar.com/avatar/4f64c9f81bb0d4ee969aaf7b4a5a6f40",
 	}
 
 	cases := []struct {
@@ -56,7 +55,6 @@ func TestUsersHandler(t *testing.T) {
 			"",
 			func() *bytes.Buffer {
 				invalidNewUser := &users.NewUser{
-					Email:        "email@email.com",
 					Password:     "password",
 					PasswordConf: "passDoNotMatch",
 					UserName:     "userName",
@@ -75,7 +73,6 @@ func TestUsersHandler(t *testing.T) {
 			func() *bytes.Buffer {
 				// test valid new user
 				validNewUser := &users.NewUser{
-					Email:        "email@email.com",
 					Password:     "password",
 					PasswordConf: "password",
 					UserName:     "userName",

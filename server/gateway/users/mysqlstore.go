@@ -28,36 +28,11 @@ func NewMySQLStore(dsn string) (*MySQLStore, error) {
 	return ms, nil
 }
 
-//ValidateSignIn takes in a Credentials object and checks if
-//the user is a registered user.
-func (ms *MySQLStore) ValidateSignIn(cred *Credentials) (*User, error) {
-	user, err := ms.GetByEmail(cred.Email)
-	if err != nil {
-		return nil, err
-	}
-	err = user.Authenticate(cred.Password)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
-}
-
 //GetByID returns the User with the given ID
 func (ms *MySQLStore) GetByID(id int64) (*User, error) {
 	user := User{}
 	row := ms.Db.QueryRow("select * from users where id = ?", id)
-	err := row.Scan(&user.ID, &user.Email, &user.PassHash, &user.UserName, &user.PhotoURL)
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
-}
-
-//GetByEmail returns the User with the given email
-func (ms *MySQLStore) GetByEmail(email string) (*User, error) {
-	user := User{}
-	row := ms.Db.QueryRow("select * from users where email = ?", email)
-	err := row.Scan(&user.ID, &user.Email, &user.PassHash, &user.UserName, &user.PhotoURL)
+	err := row.Scan(&user.ID, &user.PassHash, &user.UserName)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +43,7 @@ func (ms *MySQLStore) GetByEmail(email string) (*User, error) {
 func (ms *MySQLStore) GetByUserName(username string) (*User, error) {
 	user := User{}
 	row := ms.Db.QueryRow("select * from users where username = ?", username)
-	err := row.Scan(&user.ID, &user.Email, &user.PassHash, &user.UserName, &user.PhotoURL)
+	err := row.Scan(&user.ID, &user.PassHash, &user.UserName)
 	if err != nil {
 		return nil, err
 	}
@@ -81,8 +56,8 @@ func (ms *MySQLStore) Insert(user *User) (*User, error) {
 	if user == nil {
 		return nil, fmt.Errorf("user is nil")
 	}
-	stmt := "insert into users(email, pass_hash, username, photo_url) values (?,?,?,?)"
-	res, err := ms.Db.Exec(stmt, user.Email, user.PassHash, user.UserName, user.PhotoURL)
+	stmt := "insert into users(pass_hash, username) values (?,?)"
+	res, err := ms.Db.Exec(stmt, user.PassHash, user.UserName)
 	if err != nil {
 		err = fmt.Errorf("error inserting new row: %v", err)
 		return user, err
