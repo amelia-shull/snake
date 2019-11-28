@@ -47,11 +47,12 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			log.Println(err.Error())
-			if err.Error() == "websocket: close 1001 (going away)" {
+			log.Println(err)
+			if err != nil {
 				delete(players, ws)
 				log.Println("removing player, ws close")
 			}
@@ -113,6 +114,9 @@ func startGame(game *Game) {
 				jsonData, _ := json.Marshal(game.GameData)
 				broadcast(game.Players, jsonData)
 				if !active {
+					for _, ws := range game.Players {
+						delete(players, ws)
+					}
 					quit <- true
 				}
 			case <-quit:
