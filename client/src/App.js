@@ -23,6 +23,7 @@ function App({ws}) {
   const [view, setView] = useState(WELCOME);
   const [username, setUsername] = useState(undefined);
   const [nickName, setNickName] = useState(undefined);
+  const [authToken, setAuthToken] = useState(undefined);
 
   const globalState = {
     view,
@@ -31,7 +32,9 @@ function App({ws}) {
     setUsername,
     nickName,
     setNickName,
-    ws
+    ws,
+    authToken,
+    setAuthToken
   }
   
   return (

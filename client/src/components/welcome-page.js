@@ -82,7 +82,8 @@ function Login({globalState}) {
     const {
         setView,
         setUsername,
-        ws
+        ws,
+        setAuthToken
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -106,7 +107,7 @@ function Login({globalState}) {
             creds,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
-            const authToken = response.headers.authorization
+            setAuthToken(response.headers.authorization)
         })
         setView(GAME)
         setUsername(inputText)
@@ -117,7 +118,8 @@ function Signup({globalState}) {
     const {
         setView,
         setUsername,
-        ws
+        ws,
+        setAuthToken
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -144,7 +146,7 @@ function Signup({globalState}) {
              newUser,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
-            const authToken = response.headers.authorization
+            setAuthToken(response.headers.authorization)
         })
         setView(GAME)
         setUsername(inputText)
