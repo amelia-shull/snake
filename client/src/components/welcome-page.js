@@ -93,7 +93,6 @@ function Login({globalState, connectWebSocket}) {
     const {
         setView,
         setUsername,
-        setAuthToken
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -118,8 +117,7 @@ function Login({globalState, connectWebSocket}) {
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
             let auth = response.headers.authorization
-            console.log(auth)
-            setAuthToken(auth)
+            localStorage.setItem('auth', auth);
             connectWebSocket(auth)
             setView(GAME)
             setUsername(inputText)
@@ -134,7 +132,6 @@ function Signup({globalState, connectWebSocket}) {
     const {
         setView,
         setUsername,
-        setAuthToken
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -162,8 +159,8 @@ function Signup({globalState, connectWebSocket}) {
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
             let auth = response.headers.authorization
-            setAuthToken(auth)
             connectWebSocket(auth)
+            localStorage.setItem('auth', auth);
             setView(GAME)
             setUsername(inputText)
         })

@@ -23,7 +23,7 @@ export default function GamePage({globalState}) {
                         Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
                     </CardHeader>
                     <CardBody>
-                        {!playing && <WaitingRoom setPlaying={setPlaying} username={username} ws={ws}/>}
+                        {!playing && <WaitingRoom setPlaying={setPlaying} ws={ws}/>}
                         {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} ws={ws}/>}
                     </CardBody>
                 </Card>
@@ -34,16 +34,16 @@ export default function GamePage({globalState}) {
     }
 }
 
-function WaitingRoom({setPlaying, ws, username}) {
+function WaitingRoom({setPlaying, ws}) {
     return (
         <div>
             {
-                username != undefined && <p>Successfully logged in</p>
+                localStorage.getItem('auth') != null && <p>Successfully logged in</p>
             }
             <p>Click button when you are ready to play!</p>
             <Button onClick={() => startGame("single")}>Single-player</Button>
             {
-                username != undefined && <Button onClick={() => startGame("multi")}>Multi-player</Button>
+                localStorage.getItem('auth') != null && <Button onClick={() => startGame("multi")}>Multi-player</Button>
             }
         </div>
     )
