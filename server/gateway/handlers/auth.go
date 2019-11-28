@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
@@ -17,6 +17,7 @@ import (
 // UsersHandler will handle requests for users resources. It will accept POST
 // requests to create new user accounts.
 func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println(r)
 	if r.Method != "POST" {
 		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
@@ -36,6 +37,7 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	dec := json.NewDecoder(r.Body)
 	// check that request body can be encoded into users.NewUser struct
 	if err := dec.Decode(newUser); err != nil {
+		log.Println(err)
 		http.Error(w, "Decoding failed", http.StatusBadRequest)
 		return
 	}
@@ -43,12 +45,13 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	// ensure valid new user and converts to user
 	user, err := newUser.ToUser()
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Invalid new user", http.StatusBadRequest)
 		return
 	}
 	user, err = ctx.UserStore.Insert(user)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		http.Error(w, "Can't insert to store", http.StatusBadRequest)
 		return
 	}

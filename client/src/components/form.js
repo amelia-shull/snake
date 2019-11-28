@@ -17,11 +17,11 @@ export function Input({label, setInputText}) {
     )
 }
 
-export function SecureInput({label}) {
+export function SecureInput({label, setInputText}) {
     return (
         <div className="form-group d-flex align-items-center justify-content-between">
             <label htmlFor="default" className="mr-3">{label + ": "}</label>
-            <input id="default" type="password" className="form-control w-75" />
+            <input id="default" onChange={(e) => setInputText(e.target.value)} type="password" className="form-control w-75" />
         </div>
     )  
 }

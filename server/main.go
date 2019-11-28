@@ -75,7 +75,10 @@ func main() {
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
 	router.HandleFunc("/", wsHandler)
-	log.Fatal(http.ListenAndServe(":8844", router))
+
+	wrappedMux := handlers.NewResponseHeader(router)
+	log.Printf("server is listening at %s...", ":8844")
+	log.Fatal(http.ListenAndServe(":8844", wrappedMux))
 }
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
