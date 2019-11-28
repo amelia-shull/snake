@@ -3,13 +3,14 @@ import { Card, CardHeader, CardBody } from './card';
 import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
 
-
 export default function GamePage({globalState}) {
     const {
         username,
         nickName,
-        ws
+        ws,
     } = globalState;
+
+
 
     const [playing, setPlaying] = useState(false)
     const [gameOver, setGameOver] = useState(false)
@@ -36,9 +37,14 @@ export default function GamePage({globalState}) {
 function WaitingRoom({setPlaying, ws}) {
     return (
         <div>
+            {
+                localStorage.getItem('auth') != null && <p>Successfully logged in</p>
+            }
             <p>Click button when you are ready to play!</p>
             <Button onClick={() => startGame("single")}>Single-player</Button>
-            <Button onClick={() => startGame("multi")}>Multi-player</Button>
+            {
+                localStorage.getItem('auth') != null && <Button onClick={() => startGame("multi")}>Multi-player</Button>
+            }
         </div>
     )
 

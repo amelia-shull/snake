@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './pixel.css';
 import WelcomePage from './components/welcome-page';
 import GamePage from './components/game-page';
+import { Button } from './components/form';
 
 const constants = require('./constants');
 
@@ -19,11 +20,11 @@ const styleApp = {
 }
 
 
-function App({ws}) {
+function App() {
   const [view, setView] = useState(WELCOME);
   const [username, setUsername] = useState(undefined);
   const [nickName, setNickName] = useState(undefined);
-  const [authToken, setAuthToken] = useState(undefined);
+  const [ws, setWS] = useState(undefined);
 
   const globalState = {
     view,
@@ -33,8 +34,13 @@ function App({ws}) {
     nickName,
     setNickName,
     ws,
-    authToken,
-    setAuthToken
+    setWS
+  }
+
+  let authLocal = localStorage.getItem('auth')
+  if (authLocal != null && view != GAME) {
+    console.log("auth" + authLocal)
+    setView(GAME)
   }
   
   return (
@@ -43,6 +49,14 @@ function App({ws}) {
         {view === WELCOME && (<WelcomePage globalState={globalState}/>)}
         {view === GAME && (<GamePage globalState={globalState}/>)}
       </div>
+      {
+        localStorage.getItem('auth') != null && (
+          <Button onClick={() => {
+            localStorage.removeItem("auth")
+            setView(WELCOME)
+          }}>Log out</Button>
+        )
+      }
     </div>
   );
 }

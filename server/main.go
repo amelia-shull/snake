@@ -82,6 +82,7 @@ func main() {
 }
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.URL.Query()["auth"]
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -91,8 +92,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			log.Println(err)
-			if err != nil {
+			if players[ws] != nil {
 				players[ws].GameData.Status = "over"
 				delete(players, ws)
 				log.Println("removing player, ws close")
@@ -107,7 +107,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if res.Action == "startGame" {
-			if res.Data == "single" { // guest or single-player game
+			if res.Data == "single" || auth == nil { // Force guest to play singe-player
 				players[ws] = &Game{[]*websocket.Conn{ws}, NewGame(1)}
 				startGame(players[ws])
 			} else { // multi
