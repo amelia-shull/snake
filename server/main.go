@@ -74,6 +74,7 @@ func main() {
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
+	router.HandleFunc("/scores/", ctx.ScoresHandler)
 	router.HandleFunc("/", wsHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
