@@ -8,6 +8,7 @@ create table if not exists users (
 create table if not exists scores (
     id int not null auto_increment primary key,
 	score int not null,
-	userID int,
+	userID int not null,
+	created datetime not null,
 	CONSTRAINT FK_user_scores FOREIGN KEY (userID) REFERENCES users(id)
 );

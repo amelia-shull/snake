@@ -119,7 +119,7 @@ func TestUsersHandler(t *testing.T) {
 }
 
 func getContextHandler() *HandlerContext {
-	userStore, _ := users.NewMySQLStore("root:sqlpassword@tcp(127.0.0.1:3306)/users")
+	userStore, _ := users.NewMySQLStore("root:sqlpassword@tcp(127.0.0.1:3306)/users?parseTime=true")
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: "127.0.0.1:6379",
 	})
@@ -128,5 +128,10 @@ func getContextHandler() *HandlerContext {
 	_, _ = userStore.Db.Exec("delete from users")
 	// reset user ID or test cases fail
 	_, _ = userStore.Db.Exec("alter table users AUTO_INCREMENT = 1")
+
+	// delete all existing scores
+	_, _ = userStore.Db.Exec("delete from scores")
+	// reset score IDs
+	_, _ = userStore.Db.Exec("alter table scores AUTO_INCREMENT = 1")
 	return NewHandlerContext("signing key", sessionStore, userStore)
 }
