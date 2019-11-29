@@ -3,7 +3,6 @@ package users
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	// need it for mysql
 	_ "github.com/go-sql-driver/mysql"
@@ -60,7 +59,6 @@ func (ms *MySQLStore) Insert(user *User) (*User, error) {
 	stmt := "insert into users(pass_hash, username) values (?,?)"
 	res, err := ms.Db.Exec(stmt, user.PassHash, user.UserName)
 	if err != nil {
-		log.Println(err)
 		err = fmt.Errorf("error inserting new row: %v", err)
 		return user, err
 	}
