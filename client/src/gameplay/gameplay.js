@@ -53,7 +53,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
             })
 
             // TODO: make the score look pretty
-            let s = "Score: " + parsedState.scores[i]
+            let s = "Score: " + player.score
             p5.textSize(1.5);
             p5.fill(50);
             if (i == 0) {

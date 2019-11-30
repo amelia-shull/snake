@@ -8,7 +8,6 @@ import (
 type GameData struct {
 	Status      string   `json:"status"`
 	Players     []Player `json:"players"`
-	Scores      []int    `json:"scores"`
 	Food        Point    `json:"food"`
 	Size        int      `json:"size"`
 	FinalStatus string   `json:"finalStatus"`
@@ -18,6 +17,7 @@ type GameData struct {
 type Player struct {
 	Body      []Point `json:"body"`
 	Direction string  `json:"direction"`
+	Score     int     `json:"score"`
 }
 
 // Point is a single point in the game
@@ -35,15 +35,13 @@ const size = 40
 // NewGame sets up a new game
 func NewGame(count int) *GameData {
 	var gameData *GameData
-	player0 := Player{Body: []Point{Point{0, 0}}, Direction: down}
+	player0 := Player{Body: []Point{Point{0, 0}}, Direction: down, Score: 100}
 	players := []Player{player0}
-	scores := []int{0}
 	if count == 2 {
-		player1 := Player{Body: []Point{Point{size - 1, size - 1}}, Direction: up}
+		player1 := Player{Body: []Point{Point{size - 1, size - 1}}, Direction: up, Score: 0}
 		players = []Player{player0, player1}
-		scores = []int{0, 0}
 	}
-	gameData = &GameData{"active", players, scores, generateFood(), size, ""}
+	gameData = &GameData{"active", players, generateFood(), size, ""}
 
 	return gameData
 }
@@ -102,7 +100,7 @@ func (gameData *GameData) UpdateGame() (*GameData, bool) {
 		if body[0].equals(&gameData.Food) {
 			body = append(body, last)
 			gameData.Food = generateFood()
-			gameData.Scores[index] += 100
+			gameData.Players[index].Score = player.Score + 100
 		}
 
 		gameData.Players[index].Body = body
