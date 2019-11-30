@@ -50,6 +50,17 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Can't insert to store", http.StatusBadRequest)
 		return
 	}
+
+	// sign the user in (begin a session)
+	sessionState := &SessionState{
+		Time: time.Now(),
+		User: user,
+	}
+	if _, err = sessions.BeginSession(ctx.SigningKey, ctx.SessionStore, sessionState, w); err != nil {
+		http.Error(w, "Error beginning a session", http.StatusConflict)
+		return
+	}
+
 	w.Header().Set("content-type", "application/json")
 	// status code http.StatusCreated
 	w.WriteHeader(http.StatusCreated)
