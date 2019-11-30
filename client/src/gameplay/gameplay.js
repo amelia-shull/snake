@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
 
-export function Gameplay({ws, setGameOver, setPlaying}) {
+export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
     const [gameState, setGameState] = useState(undefined);
     var parsedState;
     ws.setUpdateGameStateFunc(setGameState)
@@ -57,9 +57,9 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
             p5.textSize(1.5);
             p5.fill(50);
             if (i == 0) {
-                p5.text(s, 31, 1.5); // left corner
-            } else {
                 p5.text(s, 0.5, 1.5); // left corner
+            } else {
+                p5.text(s, 31, 1.5); // right corner
             }
         })
     }

@@ -19,7 +19,6 @@ const styleApp = {
   justifyContent: "center"
 }
 
-
 function App() {
   const [view, setView] = useState(WELCOME);
   const [username, setUsername] = useState(undefined);
@@ -39,7 +38,6 @@ function App() {
 
   let authLocal = localStorage.getItem('auth')
   if (authLocal != null && view != GAME) {
-    console.log("auth" + authLocal)
     setView(GAME)
   }
   
@@ -52,6 +50,7 @@ function App() {
       {
         localStorage.getItem('auth') != null && (
           <Button onClick={() => {
+            localStorage.removeItem("userID")
             localStorage.removeItem("auth")
             setView(WELCOME)
           }}>Log out</Button>

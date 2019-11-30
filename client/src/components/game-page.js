@@ -10,10 +10,9 @@ export default function GamePage({globalState}) {
         ws,
     } = globalState;
 
-
-
     const [playing, setPlaying] = useState(false)
     const [gameOver, setGameOver] = useState(false)
+    const [score, setScore] = useState(0);
     
     if (!gameOver) {
         return (
@@ -24,12 +23,16 @@ export default function GamePage({globalState}) {
                     </CardHeader>
                     <CardBody>
                         {!playing && <WaitingRoom setPlaying={setPlaying} ws={ws}/>}
-                        {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} ws={ws}/>}
+                        {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
                     </CardBody>
                 </Card>
             </div>
         )
     } else {
+        // TODO: POST score to server
+        // if (localStorage.getItem('auth') != null) {
+        //     let userID = localStorage.getItem('userID')
+        // }
         return <GameOver ws={ws} setGameOver={setGameOver} setPlaying={setPlaying}/>
     }
 }

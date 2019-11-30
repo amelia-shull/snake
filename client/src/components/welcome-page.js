@@ -117,6 +117,7 @@ function Login({globalState, connectWebSocket}) {
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
             let auth = response.headers.authorization
+            localStorage.setItem('userID', response.body.id)
             localStorage.setItem('auth', auth);
             connectWebSocket(auth)
             setView(GAME)
@@ -160,6 +161,7 @@ function Signup({globalState, connectWebSocket}) {
         ).then(response => {
             let auth = response.headers.authorization
             connectWebSocket(auth)
+            localStorage.setItem('userID', response.body.id)
             localStorage.setItem('auth', auth);
             setView(GAME)
             setUsername(inputText)

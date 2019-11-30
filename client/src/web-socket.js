@@ -8,9 +8,10 @@ export class WebSocketClient {
 
     connect() {
         this.ws.onopen = event => {
+            let data = localStorage.getItem("auth") != null ? String(localStorage.getItem("userID")) : "guest"
             this.ws.send(JSON.stringify({
                 action: "sendId",
-                data: "123" // TODO: generate userID, so UI knows which player it is
+                data: data
             }))
         }
         this.ws.onmessage = event => {
