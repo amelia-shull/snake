@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
-	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // ScoresHandler will handle POST requests to /scores/:userID to store the score in request
@@ -15,17 +16,18 @@ import (
 // 		?top=n  :  encodes the top n scores
 //		?recent=n  :  encodes n most recent scores
 func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("called! " + r.URL.Path)
 	if r.Method != "POST" && r.Method != "GET" {
 		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
 	}
 	// check if current user is authenticated; return status unauthorized if not
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
-	if err != nil {
-		http.Error(w, "User not authenticated", http.StatusUnauthorized)
-		return
-	}
+	// sessionState := &SessionState{}
+	// _, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	// if err != nil {
+	// 	http.Error(w, "User not authenticated", http.StatusUnauthorized)
+	// 	return
+	// }
 
 	if r.Method == "POST" {
 		if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
@@ -41,11 +43,14 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 		score := &users.Score{}
 		dec := json.NewDecoder(r.Body)
 		if err := dec.Decode(score); err != nil {
+			log.Println(err)
 			http.Error(w, "Decoding failed", http.StatusBadRequest)
 			return
 		}
+		score.Created = time.Now()
 		score, err := ctx.UserStore.InsertScore(score)
 		if err != nil {
+			log.Println(err)
 			http.Error(w, "Can't insert to store", http.StatusBadRequest)
 			return
 		}
