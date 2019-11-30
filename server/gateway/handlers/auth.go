@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
@@ -42,6 +43,7 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	// ensure valid new user and converts to user
 	user, err := newUser.ToUser()
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Invalid new user", http.StatusBadRequest)
 		return
 	}

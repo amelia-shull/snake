@@ -161,7 +161,7 @@ function Signup({globalState, connectWebSocket}) {
         ).then(response => {
             let auth = response.headers.authorization
             connectWebSocket(auth)
-            localStorage.setItem('userID', response.body.id)
+            localStorage.setItem('userID', response.data.id)
             localStorage.setItem('auth', auth);
             setView(GAME)
             setUsername(inputText)

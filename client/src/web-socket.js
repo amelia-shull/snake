@@ -29,9 +29,11 @@ export class WebSocketClient {
     }
 
     startGame(gameType) {
+        let userID = localStorage.getItem("auth") != null ? String(localStorage.getItem("userID")) : "guest"
         this.ws.send(JSON.stringify({
             action: "startGame",
-            data: gameType
+            data: gameType,
+            userID: userID
         }))
     }
 
