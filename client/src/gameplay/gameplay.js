@@ -51,6 +51,16 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
                 p5.noStroke();
                 p5.rect(point.x, point.y, 1, 1);
             })
+
+            // TODO: make the score look pretty
+            let s = "Score: " + parsedState.scores[i]
+            p5.textSize(1.5);
+            p5.fill(50);
+            if (i == 0) {
+                p5.text(s, 31, 1.5); // left corner
+            } else {
+                p5.text(s, 0.5, 1.5); // left corner
+            }
         })
     }
 
@@ -66,5 +76,4 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
             ws.sendMove("down")
         }
     }
-
 }
