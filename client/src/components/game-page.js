@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody } from './card';
 import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
@@ -63,7 +63,7 @@ function WaitingRoom({ws, setPlaying, connectWebSocket}) {
     return (
         <div>
             {
-                localStorage.getItem('auth') != null && <p>Successfully logged in.</p>
+                localStorage.getItem('auth') != null && <UserScores></UserScores>
             }
             <p>Click button when you are ready to play!</p>
             <Button onClick={() => startGame("single")}>Single-player</Button>
@@ -84,6 +84,40 @@ function WaitingRoom({ws, setPlaying, connectWebSocket}) {
             ws.startGame(gameType)
         }
         setPlaying(true)
+    }
+}
+
+function UserScores() {
+    const [top, setTop] = useState(undefined)
+    const [recent, setRecent] = useState(undefined)
+
+    useEffect(() => {
+        getTopScore().then(res => { setTop(res) })
+        getRecentScore().then(res => { setRecent(res) })
+    },[])
+
+    return (
+        <div>
+            <p>Successfully logged in.</p>
+            <p>Your top scores:</p>
+            <ul>
+                {top}
+            </ul>
+            <p>Your recent scores:</p>
+            <ul>
+                {recent}
+            </ul>
+        </div>
+    )
+
+    async function getTopScore() {
+        const res = await axios.get('http://localhost:8844/scores/' + localStorage.getItem('userID') + "?top=5")
+        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
+    }
+
+    async function getRecentScore() {
+        const res = await axios.get('http://localhost:8844/scores/' + localStorage.getItem('userID') + "?recent=5")
+        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
     }
 }
 
