@@ -30,19 +30,17 @@ export default function GamePage({globalState}) {
             </div>
         )
     } else {
-        // TODO: add auth + fix url bug?
         if (localStorage.getItem('auth') != null) {
             let userID = localStorage.getItem('userID')
-            // let bearerToken = localStorage.getItem('auth').replace("Bearer ", "")
             let requestBody = {
                 score: score,
-                userID: userID
+                userID: parseInt(userID)
             }
+            console.log(requestBody)
             axios.post(
-                // 'http://localhost:8844/scores/' + userID,
                 'http://localhost:8844/scores',
                 requestBody,
-                { headers: { 'Content-Type': 'application/json' } }
+                { headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('auth') } }
             ).then(response => {
                 console.log(response)
             })

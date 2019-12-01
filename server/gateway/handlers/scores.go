@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
@@ -39,12 +40,13 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 	score := &users.Score{}
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(score); err != nil {
+		log.Println(err)
 		http.Error(w, "Decoding failed", http.StatusBadRequest)
 		return
 	}
 
 	// can only post scores to your own account
-	if sessionState.User.ID != score.UserID {
+	if int(sessionState.User.ID) != score.UserID {
 		http.Error(w, "User not authorized", http.StatusUnauthorized)
 		return
 	}
@@ -56,6 +58,7 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 	score.Created = timeNow
 	score, err = ctx.UserStore.InsertScore(score)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Can't insert to store", http.StatusBadRequest)
 		return
 	}

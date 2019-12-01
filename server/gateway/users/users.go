@@ -36,8 +36,8 @@ type NewUser struct {
 type Score struct {
 	ID      int64     `json:"-"`
 	Score   int       `json:"score"`
-	UserID  int64     `json:"userID"`
-	Created time.Time `json:"-"`
+	UserID  int       `json:"userID"`
+	Created time.Time `json:"created"`
 }
 
 // Equals determines if two users are the same
