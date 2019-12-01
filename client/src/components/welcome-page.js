@@ -117,7 +117,7 @@ function Login({globalState, connectWebSocket}) {
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
             let auth = response.headers.authorization
-            localStorage.setItem('userID', response.body.id)
+            localStorage.setItem('userID', response.data.id)
             localStorage.setItem('auth', auth);
             connectWebSocket(auth)
             setView(GAME)

@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+/*
+Test works for an older version of scores.go
+*/
+
 func TestPostScores(t *testing.T) {
 	ctx := getContextHandler()
 	sid, user := GetSID(ctx, t)
@@ -86,9 +90,8 @@ func TestGetScores(t *testing.T) {
 	timeNow, _ := time.Parse("2006-01-02T15:04:05Z", "2019-11-28T11:45:26Z")
 	scores := []users.Score{
 		users.Score{
-			Score:   1,
-			UserID:  8,
-			Created: timeNow.Add(time.Minute * time.Duration(1)),
+			Score:  1,
+			UserID: 8,
 		},
 		users.Score{
 			Score:   100,

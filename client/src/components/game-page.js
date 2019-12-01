@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardBody } from './card';
 import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
+import axios from 'axios';
 
 export default function GamePage({globalState}) {
     const {
@@ -29,10 +30,26 @@ export default function GamePage({globalState}) {
             </div>
         )
     } else {
-        // TODO: POST score to server
-        // if (localStorage.getItem('auth') != null) {
-        //     let userID = localStorage.getItem('userID')
-        // }
+        // TODO: add auth + fix url bug?
+        if (localStorage.getItem('auth') != null) {
+            let userID = localStorage.getItem('userID')
+            // let bearerToken = localStorage.getItem('auth').replace("Bearer ", "")
+            let requestBody = {
+                score: score,
+                userID: userID
+            }
+            axios.post(
+                // 'http://localhost:8844/scores/' + userID,
+                'http://localhost:8844/scores',
+                requestBody,
+                { headers: { 'Content-Type': 'application/json' } }
+            ).then(response => {
+                console.log(response)
+            })
+            .catch(err =>{
+                console.log(err)
+            })
+        }
         return <GameOver ws={ws} setGameOver={setGameOver} setPlaying={setPlaying}/>
     }
 }

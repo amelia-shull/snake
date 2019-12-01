@@ -57,7 +57,7 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		dsn = "root:sqlpassword@tcp(localhost:3306)/users"
+		dsn = "root:sqlpassword@tcp(localhost:3306)/users?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
 	time.Sleep(1)
@@ -79,7 +79,8 @@ func main() {
 	ctx := handlers.NewHandlerContext(signingKey, sessionStore, userStore)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/scores/", ctx.ScoresHandler)
+	router.HandleFunc("/scores", ctx.ScoresHandler)
+	router.HandleFunc("/scores/{userID}", ctx.SpecificScoresHandler)
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)

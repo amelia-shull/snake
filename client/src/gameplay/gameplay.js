@@ -3,6 +3,7 @@ import Sketch from 'react-p5';
 
 export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
     const [gameState, setGameState] = useState(undefined);
+    const userID = localStorage.getItem("userID")
     var parsedState;
     ws.setUpdateGameStateFunc(setGameState)
 
@@ -51,6 +52,10 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
                 p5.noStroke();
                 p5.rect(point.x, point.y, 1, 1);
             })
+            // set score for this user
+            if (player.userID === userID) {
+                setScore(player.score)
+            }
 
             // TODO: make the score look pretty
             let s = "Score: " + player.score
