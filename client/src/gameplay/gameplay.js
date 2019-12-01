@@ -12,7 +12,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
     var size = 15;
 
     
-    if (gameState != undefined) {
+    if (gameState !== undefined) {
         parsedState = JSON.parse(gameState)
         console.log(parsedState)
         if (parsedState.status === "active") {
@@ -61,7 +61,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
             let s = "Score: " + player.score
             p5.textSize(1.5);
             p5.fill(50);
-            if (i == 0) {
+            if (i === 0) {
                 p5.text(s, 0.5, 1.5); // left corner
             } else {
                 p5.text(s, 31, 1.5); // right corner

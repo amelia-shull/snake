@@ -2,19 +2,28 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardBody } from './card';
 import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
+import { WebSocketClient } from '../web-socket';
 import axios from 'axios';
 
 export default function GamePage({globalState}) {
     const {
         username,
         nickName,
+        setWS,
         ws,
     } = globalState;
 
     const [playing, setPlaying] = useState(false)
     const [gameOver, setGameOver] = useState(false)
     const [score, setScore] = useState(0);
-    
+
+    function connectWebSocket(auth) {
+        let ws = new WebSocketClient(auth)
+        setWS(ws)
+        ws.connect()
+        return ws
+    }
+
     if (!gameOver) {
         return (
             <div>
@@ -23,7 +32,7 @@ export default function GamePage({globalState}) {
                         Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
                     </CardHeader>
                     <CardBody>
-                        {!playing && <WaitingRoom setPlaying={setPlaying} ws={ws}/>}
+                        {!playing && <WaitingRoom setPlaying={setPlaying} connectWebSocket={connectWebSocket}/>}
                         {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
                     </CardBody>
                 </Card>
@@ -36,7 +45,6 @@ export default function GamePage({globalState}) {
                 score: score,
                 userID: parseInt(userID)
             }
-            console.log(requestBody)
             axios.post(
                 'http://localhost:8844/scores',
                 requestBody,
@@ -52,11 +60,11 @@ export default function GamePage({globalState}) {
     }
 }
 
-function WaitingRoom({setPlaying, ws}) {
+function WaitingRoom({setPlaying, connectWebSocket}) {
     return (
         <div>
             {
-                localStorage.getItem('auth') != null && <p>Successfully logged in</p>
+                localStorage.getItem('auth') != null && <p>Successfully logged in.</p>
             }
             <p>Click button when you are ready to play!</p>
             <Button onClick={() => startGame("single")}>Single-player</Button>
@@ -67,6 +75,8 @@ function WaitingRoom({setPlaying, ws}) {
     )
 
     function startGame(gameType) {
+        let auth = localStorage.getItem('auth')
+        let ws = connectWebSocket(auth)
         ws.startGame(gameType)
         setPlaying(true)
     }

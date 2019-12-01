@@ -1,7 +1,7 @@
 
 export class WebSocketClient {
     constructor(auth) {
-        let url = auth != undefined ? `ws://localhost:8844/?auth=${auth}` : "ws://localhost:8844/"
+        let url = auth !== undefined ? `ws://localhost:8844/?auth=${auth}` : "ws://localhost:8844/"
         this.ws = new WebSocket(url)
         this.updateGameState = () => {}
     }

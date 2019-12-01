@@ -69,8 +69,7 @@ export default function WelcomePage({globalState}) {
 function Guest({globalState, connectWebSocket}) {
     const {
         setView,
-        setNickName,
-        ws
+        setNickName
     } = globalState
 
     const [inputText, setInputText] = useState("")

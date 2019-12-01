@@ -37,7 +37,7 @@ function App() {
   }
 
   let authLocal = localStorage.getItem('auth')
-  if (authLocal != null && view != GAME) {
+  if (authLocal !== null && view !== GAME) {
     setView(GAME)
   }
   
