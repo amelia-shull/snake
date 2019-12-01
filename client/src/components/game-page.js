@@ -31,7 +31,7 @@ export default function GamePage({globalState}) {
                         Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
                     </CardHeader>
                     <CardBody>
-                        {!playing && <WaitingRoom ws={ws} setPlaying={setPlaying} connectWebSocket={connectWebSocket}/>}
+                        {!playing && <WaitingRoom ws={ws} setPlaying={setPlaying} connectWebSocket={connectWebSocket} setWS={setWS}/>}
                         {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
                     </CardBody>
                 </Card>
@@ -59,7 +59,12 @@ export default function GamePage({globalState}) {
     }
 }
 
-function WaitingRoom({ws, setPlaying, connectWebSocket}) {
+function WaitingRoom({ws, setPlaying, connectWebSocket, setWS}) {
+    let auth = localStorage.getItem('auth') 
+    useEffect(() => {
+        setWS(new WebSocketClient(auth))
+    },[])
+
     return (
         <div>
             {
@@ -74,15 +79,7 @@ function WaitingRoom({ws, setPlaying, connectWebSocket}) {
     )
 
     function startGame(gameType) {
-        let auth = localStorage.getItem('auth')
-        if (ws == undefined) {
-            let wsClient = connectWebSocket(auth)
-            setTimeout(() => {
-                wsClient.startGame(gameType)
-            }, 50)
-        } else {
-            ws.startGame(gameType)
-        }
+        ws.startGame(gameType)
         setPlaying(true)
     }
 }
