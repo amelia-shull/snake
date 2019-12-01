@@ -62,7 +62,6 @@ export default function WelcomePage({globalState}) {
     function connectWebSocket(auth) {
         let ws = new WebSocketClient(auth)
         setWS(ws)
-        ws.connect()
     }
 }
 

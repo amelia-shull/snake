@@ -18,10 +18,9 @@ export default function GamePage({globalState}) {
     const [score, setScore] = useState(0);
 
     function connectWebSocket(auth) {
-        let ws = new WebSocketClient(auth)
-        setWS(ws)
-        ws.connect()
-        return ws
+        let wsClient = new WebSocketClient(auth)
+        setWS(wsClient)
+        return wsClient
     }
 
     if (!gameOver) {
@@ -32,7 +31,7 @@ export default function GamePage({globalState}) {
                         Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
                     </CardHeader>
                     <CardBody>
-                        {!playing && <WaitingRoom setPlaying={setPlaying} connectWebSocket={connectWebSocket}/>}
+                        {!playing && <WaitingRoom ws={ws} setPlaying={setPlaying} connectWebSocket={connectWebSocket}/>}
                         {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
                     </CardBody>
                 </Card>
@@ -60,7 +59,7 @@ export default function GamePage({globalState}) {
     }
 }
 
-function WaitingRoom({setPlaying, connectWebSocket}) {
+function WaitingRoom({ws, setPlaying, connectWebSocket}) {
     return (
         <div>
             {
@@ -76,8 +75,14 @@ function WaitingRoom({setPlaying, connectWebSocket}) {
 
     function startGame(gameType) {
         let auth = localStorage.getItem('auth')
-        let ws = connectWebSocket(auth)
-        ws.startGame(gameType)
+        if (ws == undefined) {
+            let wsClient = connectWebSocket(auth)
+            setTimeout(() => {
+                wsClient.startGame(gameType)
+            }, 50)
+        } else {
+            ws.startGame(gameType)
+        }
         setPlaying(true)
     }
 }
