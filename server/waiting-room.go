@@ -8,6 +8,16 @@ type WaitingRoom struct {
 	size    int
 }
 
+// IndexOf determines the location of the ws connection in the waitingRoom
+func (wr *WaitingRoom) IndexOf(ws *websocket.Conn) int {
+	for i := 0; i < wr.size; i++ {
+		if wr.players[i].Ws == ws {
+			return i
+		}
+	}
+	return -1
+}
+
 // Add will add a ws connection to the queue
 func (wr *WaitingRoom) Add(ws *websocket.Conn, userID string) {
 	connection := &PlayerConnection{ws, userID}
@@ -31,6 +41,16 @@ func (wr *WaitingRoom) Remove() *PlayerConnection {
 		return first
 	}
 	return nil
+}
+
+// RemoveAt will remove a player at given index from the waitingRoom
+func (wr *WaitingRoom) RemoveAt(index int) {
+	if wr.size >= 1 {
+		for i := index; i < wr.size-1; i++ {
+			wr.players[i] = wr.players[i+1]
+		}
+	}
+	wr.size = wr.size - 1
 }
 
 // Size returns the size of queue
