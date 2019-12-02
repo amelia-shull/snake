@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Card, CardHeader, CardBody } from '../components/card';
 import Sketch from 'react-p5';
 
-export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
+export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponentScore, setOpponentScore}) {
     const [gameState, setGameState] = useState(undefined);
     const userID = localStorage.getItem("userID")
     var parsedState;
@@ -17,7 +18,12 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
         if (parsedState.status === "active") {
             return (
                 <div style={{display: "flex", justifyContent: "center"}}>
-                    <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
+                    <div>
+                        <h7>Game Stats</h7>
+                        <ScoreCard title="Your score">{score}</ScoreCard>
+                        {parsedState.players.length > 1 && <ScoreCard title="Opponent's score">{opponentScore}</ScoreCard>}
+                    </div>
+                    <Sketch setup={setup} draw={draw} keyPressed={keyPressed}/>
                 </div>
             );
         } else {
@@ -49,23 +55,19 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
 
         parsedState.players.forEach((player, i) => {
             player.body.forEach((point) => {
-                p5.fill(0);
+                if (player.userID == userID || player.userID == "guest") {
+                    p5.fill("#FF0000")
+                } else {
+                    p5.fill(0);
+                }
                 p5.noStroke();
                 p5.rect(point.x, point.y, 1, 1);
             })
             // set score for this user
             if (player.userID === userID) {
                 setScore(player.score)
-            }
-
-            // TODO: make the score look pretty
-            let s = "Score: " + player.score
-            p5.textSize(1.5);
-            p5.fill(50);
-            if (i === 0) {
-                p5.text(s, 0.5, 1.5); // left corner
             } else {
-                p5.text(s, 31, 1.5); // right corner
+                setOpponentScore(player.score)
             }
         })
     }
@@ -82,4 +84,19 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
             ws.sendMove("down")
         }
     }
+}
+
+function ScoreCard({title, children}) {
+    return (
+        <div style={{width: "200px", marginRight: "50px", marginTop:"20px"}}>
+            <Card>
+                <CardHeader>
+                    {title}
+                </CardHeader>
+                <CardBody>
+                    {children}
+                </CardBody>
+            </Card>
+        </div>
+    );
 }
