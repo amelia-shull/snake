@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardBody } from './card';
 import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
 import { WebSocketClient } from '../web-socket';
 import axios from 'axios';
+import { UserScores } from './scores';
 
 const constants = require('../constants.js');
 
@@ -75,6 +75,8 @@ function WaitingRoom({setWS, startNewGame}) {
 
     return (
         <div>
+            <h6>{`Welcome ${localStorage.getItem("name")}!`}</h6>
+
             {
                 localStorage.getItem('auth') != null && <UserScores></UserScores>
             }
@@ -85,40 +87,6 @@ function WaitingRoom({setWS, startNewGame}) {
             }
         </div>
     )
-}
-
-function UserScores() {
-    const [top, setTop] = useState(undefined)
-    const [recent, setRecent] = useState(undefined)
-
-    useEffect(() => {
-        getTopScore().then(res => { setTop(res) })
-        getRecentScore().then(res => { setRecent(res) })
-    },[])
-
-    return (
-        <div>
-            <h6>{`Welcome ${localStorage.getItem("name")}!`}</h6>
-            <p>Your top scores:</p>
-            <ul>
-                {top}
-            </ul>
-            <p>Your recent scores:</p>
-            <ul>
-                {recent}
-            </ul>
-        </div>
-    )
-
-    async function getTopScore() {
-        const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?top=5")
-        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
-    }
-
-    async function getRecentScore() {
-        const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?recent=5")
-        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
-    }
 }
 
 function GameOver({startNewGame, score, opponentScore}) {

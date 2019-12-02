@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody } from './card';
 import { TabMenu, TabMenuItem, Tab } from './tabs';
 import GamePage from './game-page';
+import ScoresPage from './scores-page';
 import ProfilePage from './profile-page';
 
 export default function MainPage({globalState}) {
@@ -37,7 +38,7 @@ export default function MainPage({globalState}) {
                     )}
                     {tabSelection === SCORES && (
                         <Tab>
-                            
+                            <ScoresPage globalState={globalState}/>
                         </Tab>
                     )}
                     {tabSelection === PROFILE && (

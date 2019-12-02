@@ -89,7 +89,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
 function ScoreCard({title, children}) {
     return (
         <div style={{width: "200px", marginRight: "50px", marginTop:"20px"}}>
-            <Card>
+            <Card cardTheme="card-tertiary">
                 <CardHeader>
                     {title}
                 </CardHeader>

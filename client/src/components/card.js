@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function Card({children}) {
+export function Card({children, cardTheme}) {
     return (
-        <div className="card">
+        <div className={`${cardTheme != null ? cardTheme + " ": ""}card`}>
             {children}
         </div>
     )
