@@ -1,3 +1,4 @@
+// 1st iteration -- not used anymore
 export class Snake {
     constructor(p5) {
         this.body = [];

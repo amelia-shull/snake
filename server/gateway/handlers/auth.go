@@ -50,6 +50,17 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Can't insert to store", http.StatusBadRequest)
 		return
 	}
+
+	// sign the user in (begin a session)
+	sessionState := &SessionState{
+		Time: time.Now(),
+		User: user,
+	}
+	if _, err = sessions.BeginSession(ctx.SigningKey, ctx.SessionStore, sessionState, w); err != nil {
+		http.Error(w, "Error beginning a session", http.StatusConflict)
+		return
+	}
+
 	w.Header().Set("content-type", "application/json")
 	// status code http.StatusCreated
 	w.WriteHeader(http.StatusCreated)
@@ -130,11 +141,11 @@ func (ctx *HandlerContext) SpecificSessionsHandler(w http.ResponseWriter, r *htt
 		http.Error(w, "Method must be DELETE", http.StatusMethodNotAllowed)
 		return
 	}
-
-	// Get URL and make sure it's valid
-	url := r.URL.Path
-	if url != "/sessions/mine" {
-		http.Error(w, "Access forbidden", http.StatusForbidden)
+	// check if current user is authenticated; return status forbidden if not
+	sessionState := &SessionState{}
+	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusForbidden)
 		return
 	}
 

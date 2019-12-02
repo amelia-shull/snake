@@ -62,15 +62,13 @@ export default function WelcomePage({globalState}) {
     function connectWebSocket(auth) {
         let ws = new WebSocketClient(auth)
         setWS(ws)
-        ws.connect()
     }
 }
 
 function Guest({globalState, connectWebSocket}) {
     const {
         setView,
-        setNickName,
-        ws
+        setNickName
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -117,6 +115,7 @@ function Login({globalState, connectWebSocket}) {
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
             let auth = response.headers.authorization
+            localStorage.setItem('userID', response.data.id)
             localStorage.setItem('auth', auth);
             connectWebSocket(auth)
             setView(GAME)
@@ -160,6 +159,7 @@ function Signup({globalState, connectWebSocket}) {
         ).then(response => {
             let auth = response.headers.authorization
             connectWebSocket(auth)
+            localStorage.setItem('userID', response.data.id)
             localStorage.setItem('auth', auth);
             setView(GAME)
             setUsername(inputText)

@@ -19,12 +19,20 @@ import (
 type webSocketData struct {
 	Action string `json:"action"`
 	Data   string `json:"data"`
+	UserID string `json:"userID"`
+}
+
+// PlayerConnection holds a player connection and userID as identification
+type PlayerConnection struct {
+	Ws     *websocket.Conn
+	UserID string
 }
 
 // Game stores game data and ws info of players
 type Game struct {
-	Players  []*websocket.Conn
-	GameData *GameData
+	Players     []*PlayerConnection
+	Connections []*websocket.Conn
+	GameData    *GameData
 }
 
 var waitingRoom WaitingRoom
@@ -49,7 +57,7 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		dsn = "root:sqlpassword@tcp(localhost:3306)/users"
+		dsn = "root:sqlpassword@tcp(localhost:3306)/users?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
 	time.Sleep(1)
@@ -71,10 +79,11 @@ func main() {
 	ctx := handlers.NewHandlerContext(signingKey, sessionStore, userStore)
 
 	router := mux.NewRouter()
+	router.HandleFunc("/scores", ctx.ScoresHandler)
+	router.HandleFunc("/scores/{userID}", ctx.SpecificScoresHandler)
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
 	router.HandleFunc("/sessions/", ctx.SpecificSessionsHandler)
-	router.HandleFunc("/scores/", ctx.ScoresHandler)
 	router.HandleFunc("/", wsHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
@@ -109,10 +118,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 		if res.Action == "startGame" {
 			if res.Data == "single" || auth == nil { // Force guest to play singe-player
-				players[ws] = &Game{[]*websocket.Conn{ws}, NewGame(1)}
+				players[ws] = &Game{[]*PlayerConnection{&PlayerConnection{ws, res.UserID}}, []*websocket.Conn{ws}, NewGame(1, []string{res.UserID})}
 				startGame(players[ws])
 			} else { // multi
-				updateWaitingRoom(ws)
+				updateWaitingRoom(ws, res.UserID)
 			}
 		} else if res.Action == "sendMove" {
 			updateDirection(players[ws], ws, res.Data)
@@ -122,23 +131,23 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 func updateDirection(game *Game, ws *websocket.Conn, direction string) {
 	for i, playerWS := range game.Players {
-		if playerWS == ws {
+		if playerWS.Ws == ws {
 			game.GameData.UpdateDirection(i, direction)
 		}
 	}
 }
 
-func updateWaitingRoom(ws *websocket.Conn) {
+func updateWaitingRoom(ws *websocket.Conn, userID string) {
 	if waitingRoom.Size() >= 1 {
 		player1 := waitingRoom.Remove()
-		playerList := []*websocket.Conn{player1, ws}
-		newGame := &Game{playerList, NewGame(2)}
-		players[player1] = newGame
+		playerList := []*PlayerConnection{player1, &PlayerConnection{ws, userID}}
+		newGame := &Game{playerList, []*websocket.Conn{player1.Ws, ws}, NewGame(2, []string{player1.UserID, userID})}
+		players[player1.Ws] = newGame
 		players[ws] = newGame
 		startGame(newGame)
 	} else {
 		log.Println("Add player to waiting room")
-		waitingRoom.Add(ws)
+		waitingRoom.Add(ws, userID)
 	}
 }
 
@@ -154,9 +163,9 @@ func startGame(game *Game) {
 				gameData, active := game.GameData.UpdateGame()
 				game.GameData = gameData
 				jsonData, _ := json.Marshal(game.GameData)
-				broadcast(game.Players, jsonData)
+				broadcast(game.Connections, jsonData)
 				if !active {
-					for _, ws := range game.Players {
+					for _, ws := range game.Connections {
 						delete(players, ws)
 					}
 					quit <- true

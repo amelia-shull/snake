@@ -4,29 +4,30 @@ import "github.com/gorilla/websocket"
 
 // WaitingRoom is a queue
 type WaitingRoom struct {
-	players []*websocket.Conn
+	players []*PlayerConnection
 	size    int
 }
 
 // Add will add a ws connection to the queue
-func (wr *WaitingRoom) Add(ws *websocket.Conn) {
+func (wr *WaitingRoom) Add(ws *websocket.Conn, userID string) {
+	connection := &PlayerConnection{ws, userID}
 	if wr.size >= len(wr.players) {
-		wr.players = append(wr.players, nil)
+		wr.players = append(wr.players, &PlayerConnection{})
 	}
-	wr.players[wr.size] = ws
+	wr.players[wr.size] = connection
 	wr.size = wr.size + 1
 }
 
 // Remove will return the ws that has been in the
 // queue the longest
-func (wr *WaitingRoom) Remove() *websocket.Conn {
+func (wr *WaitingRoom) Remove() *PlayerConnection {
 	if wr.size >= 1 {
 		wr.size = wr.size - 1
 		first := wr.players[0]
 		for i := 0; i < wr.size; i++ {
 			wr.players[i] = wr.players[i+1]
 		}
-		wr.players[wr.size] = nil
+		wr.players[wr.size] = &PlayerConnection{}
 		return first
 	}
 	return nil

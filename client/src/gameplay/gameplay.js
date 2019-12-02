@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Sketch from 'react-p5';
 
-export function Gameplay({ws, setGameOver, setPlaying}) {
+export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
     const [gameState, setGameState] = useState(undefined);
+    const userID = localStorage.getItem("userID")
     var parsedState;
     ws.setUpdateGameStateFunc(setGameState)
 
@@ -11,7 +12,7 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
     var size = 15;
 
     
-    if (gameState != undefined) {
+    if (gameState !== undefined) {
         parsedState = JSON.parse(gameState)
         console.log(parsedState)
         if (parsedState.status === "active") {
@@ -51,6 +52,20 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
                 p5.noStroke();
                 p5.rect(point.x, point.y, 1, 1);
             })
+            // set score for this user
+            if (player.userID === userID) {
+                setScore(player.score)
+            }
+
+            // TODO: make the score look pretty
+            let s = "Score: " + player.score
+            p5.textSize(1.5);
+            p5.fill(50);
+            if (i === 0) {
+                p5.text(s, 0.5, 1.5); // left corner
+            } else {
+                p5.text(s, 31, 1.5); // right corner
+            }
         })
     }
 
@@ -66,5 +81,4 @@ export function Gameplay({ws, setGameOver, setPlaying}) {
             ws.sendMove("down")
         }
     }
-
 }

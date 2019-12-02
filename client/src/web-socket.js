@@ -1,18 +1,9 @@
 
 export class WebSocketClient {
     constructor(auth) {
-        let url = auth != undefined ? `ws://localhost:8844/?auth=${auth}` : "ws://localhost:8844/"
+        let url = auth !== undefined ? `ws://localhost:8844/?auth=${auth}` : "ws://localhost:8844/"
         this.ws = new WebSocket(url)
         this.updateGameState = () => {}
-    }
-
-    connect() {
-        this.ws.onopen = event => {
-            this.ws.send(JSON.stringify({
-                action: "sendId",
-                data: "123" // TODO: generate userID, so UI knows which player it is
-            }))
-        }
         this.ws.onmessage = event => {
             let data = event.data;
             if (data.startsWith("Update:")) { // I don't remember why I did this testing something????
@@ -28,9 +19,11 @@ export class WebSocketClient {
     }
 
     startGame(gameType) {
+        let userID = localStorage.getItem("auth") != null ? String(localStorage.getItem("userID")) : "guest"
         this.ws.send(JSON.stringify({
             action: "startGame",
-            data: gameType
+            data: gameType,
+            userID: userID
         }))
     }
 
