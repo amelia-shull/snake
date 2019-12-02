@@ -121,7 +121,9 @@ function GameOver({ws, setGameOver, setPlaying}) {
             <CardBody>
                 Play again!
                 <Button onClick={() => playAgain("single")}>Single-player</Button>
-                <Button onClick={() => playAgain("multi")}>Multi-player</Button>
+                {
+                    localStorage.getItem('auth') != null && <Button onClick={() => playAgain("multi")}>Multi-player</Button>
+                }
             </CardBody>
         </Card>
     )
