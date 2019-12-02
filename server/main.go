@@ -113,10 +113,16 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
+			log.Println(err)
+			// Removes players from game if one leaves
 			if players[ws] != nil {
 				players[ws].GameData.Status = "over"
 				delete(players, ws)
 				log.Println("removing player, ws close")
+			}
+			// Removes player from waitingRoom if they leave
+			if index := waitingRoom.IndexOf(ws); index > -1 {
+				waitingRoom.RemoveAt(index)
 			}
 			return
 		}
@@ -128,7 +134,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if res.Action == "startGame" {
-			if res.Data == "single" || auth == nil { // Force guest to play singe-player
+			if res.Data == "single" || len(auth) == 0 { // Force guest to play singe-player
 				players[ws] = &Game{[]*PlayerConnection{&PlayerConnection{ws, res.UserID}}, []*websocket.Conn{ws}, NewGame(1, []string{res.UserID})}
 				startGame(players[ws])
 			} else { // multi
