@@ -1,7 +1,12 @@
+const constants = require('./constants.js');
+
+const {
+    BASE_URL_WS
+} = constants.URL
 
 export class WebSocketClient {
     constructor(auth) {
-        let url = auth !== undefined ? `ws://localhost:8844/?auth=${auth}` : "ws://localhost:8844/"
+        let url = auth !== undefined ? BASE_URL_WS + `?auth=${auth}` : BASE_URL_WS
         this.ws = new WebSocket(url)
         this.updateGameState = () => {}
         this.ws.onmessage = event => {

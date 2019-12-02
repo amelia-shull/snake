@@ -14,6 +14,14 @@ import (
 )
 
 func main() {
+	addr := os.Getenv("ADDR")
+	if len(addr) == 0 {
+		addr = ":443"
+	}
+
+	tlsKeyPath := os.Getenv("TLSKEY")
+	tlsCertPath := os.Getenv("TLSCERT")
+
 	// session signing key
 	signingKey := os.Getenv("SESSIONKEY")
 	if len(signingKey) == 0 {
@@ -23,7 +31,8 @@ func main() {
 	// set up the sql store
 	dsn := os.Getenv("DSN")
 	if len(dsn) == 0 {
-		dsn = "root:sqlpassword@tcp(localhost:3306)/users?parseTime=true"
+		dsn = "root:sqlpassword@tcp(user-store:3306)/users?parseTime=true"
+		// dsn = "root:sqlpassword@tcp(localhost:3306)/users?parseTime=true"
 	}
 	userStore, err := users.NewMySQLStore(dsn)
 	time.Sleep(1)
@@ -35,7 +44,8 @@ func main() {
 	// set up redis store
 	redisaddr := os.Getenv("REDISADDR")
 	if len(redisaddr) == 0 {
-		redisaddr = "localhost:6379"
+		// redisaddr = "localhost:6379"
+		redisaddr = "redisServer:6379"
 	}
 	client := redis.NewClient(&redis.Options{
 		Addr: redisaddr,
@@ -46,6 +56,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/scores", ctx.ScoresHandler)
+	router.HandleFunc("/scores/", ctx.SpecificScoresHandler)
 	router.HandleFunc("/scores/{userID}", ctx.SpecificScoresHandler)
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)
@@ -53,6 +64,7 @@ func main() {
 	router.HandleFunc("/", ctx.WsHandler)
 
 	wrappedMux := handlers.NewResponseHeader(router)
-	log.Printf("server is listening at %s...", ":8844")
-	log.Fatal(http.ListenAndServe(":8844", wrappedMux))
+	log.Printf("server is listening at %s...", addr)
+	log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
+	// log.Fatal(http.ListenAndServe(addr, wrappedMux))
 }

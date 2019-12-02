@@ -8,6 +8,10 @@ const {
   WELCOME
 } = constants.MAIN_VIEWS
 
+const {
+    BASE_URL
+} = constants.URL
+
 export default function ProfilePage({globalState}) {
     const {
         setView
@@ -20,7 +24,7 @@ export default function ProfilePage({globalState}) {
             <div>
                 <h6>{`${localStorage.getItem("name")}'s profile`}</h6>
                 <Button onClick={() => {
-                    axios.delete("http://localhost:8844/sessions/", { 
+                    axios.delete(BASE_URL + "sessions/", { 
                         headers: { 
                             'Authorization': localStorage.getItem('auth') 
                         }

@@ -5,6 +5,12 @@ import { Gameplay } from '../gameplay/gameplay';
 import { WebSocketClient } from '../web-socket';
 import axios from 'axios';
 
+const constants = require('../constants.js');
+
+const {
+    BASE_URL
+} = constants.URL
+
 export default function GamePage({globalState}) {
     const {
         setWS,
@@ -41,7 +47,7 @@ export default function GamePage({globalState}) {
                 userID: parseInt(userID)
             }
             axios.post(
-                'http://localhost:8844/scores',
+                BASE_URL + 'scores',
                 requestBody,
                 { headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('auth') } }
             ).then(response => {
@@ -105,12 +111,12 @@ function UserScores() {
     )
 
     async function getTopScore() {
-        const res = await axios.get('http://localhost:8844/scores/' + localStorage.getItem('userID') + "?top=5")
+        const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?top=5")
         return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
     }
 
     async function getRecentScore() {
-        const res = await axios.get('http://localhost:8844/scores/' + localStorage.getItem('userID') + "?recent=5")
+        const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?recent=5")
         return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
     }
 }

@@ -8,6 +8,10 @@ const {
     MAIN
 } = constants.MAIN_VIEWS
 
+const {
+    BASE_URL
+} = constants.URL
+
 function connectWebSocket(auth, setWS) {
     let ws = new WebSocketClient(auth)
     setWS(ws)
@@ -39,7 +43,7 @@ export function Login({globalState}) {
         }
         setErr(undefined)
         axios.post(
-            'http://localhost:8844/sessions',
+            BASE_URL + 'sessions',
             creds,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
@@ -80,7 +84,6 @@ export function Signup({globalState}) {
             <Button onClick={createAccount}>Create Account</Button>
         </Form>
     )
-
     function createAccount() {
         const newUser = {
             password: inputPassword,
@@ -89,7 +92,7 @@ export function Signup({globalState}) {
         }
         setErr(undefined)
         axios.post(
-            'http://localhost:8844/users',
+            BASE_URL + 'users',
              newUser,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
