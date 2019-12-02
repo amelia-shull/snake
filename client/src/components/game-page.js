@@ -13,8 +13,6 @@ const {
 
 export default function GamePage({globalState}) {
     const {
-        username,
-        nickName,
         setWS,
         ws,
     } = globalState;
@@ -26,15 +24,8 @@ export default function GamePage({globalState}) {
     if (!gameOver) {
         return (
             <div>
-                <Card>
-                    <CardHeader>
-                        Welcome {nickName ? nickName + "!": (username ? username + "!" : "")}
-                    </CardHeader>
-                    <CardBody>
-                        {!playing && <WaitingRoom ws={ws} setPlaying={setPlaying} setWS={setWS}/>}
-                        {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
-                    </CardBody>
-                </Card>
+                {!playing && <WaitingRoom setWS={setWS} startNewGame={startNewGame}/>}
+                {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
             </div>
         )
     } else {
@@ -55,11 +46,17 @@ export default function GamePage({globalState}) {
                 console.log(err)
             })
         }
-        return <GameOver ws={ws} setGameOver={setGameOver} setPlaying={setPlaying}/>
+        return <GameOver startNewGame={startNewGame}/>
+    }
+
+    function startNewGame(gameType){
+        ws.startGame(gameType)
+        setGameOver(false)
+        setPlaying(true) 
     }
 }
 
-function WaitingRoom({ws, setPlaying, setWS}) {
+function WaitingRoom({setWS, startNewGame}) {
     let auth = localStorage.getItem('auth') 
     useEffect(() => {
         setWS(new WebSocketClient(auth))
@@ -71,17 +68,12 @@ function WaitingRoom({ws, setPlaying, setWS}) {
                 localStorage.getItem('auth') != null && <UserScores></UserScores>
             }
             <p>Click button when you are ready to play!</p>
-            <Button onClick={() => startGame("single")}>Single-player</Button>
+            <Button onClick={() => startNewGame("single")}>Single-player</Button>
             {
-                localStorage.getItem('auth') != null && <Button onClick={() => startGame("multi")}>Multi-player</Button>
+                localStorage.getItem('auth') != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
             }
         </div>
     )
-
-    function startGame(gameType) {
-        ws.startGame(gameType)
-        setPlaying(true)
-    }
 }
 
 function UserScores() {
@@ -95,7 +87,7 @@ function UserScores() {
 
     return (
         <div>
-            <p>Successfully logged in.</p>
+            <h6>{`Welcome ${localStorage.getItem("name")}!`}</h6>
             <p>Your top scores:</p>
             <ul>
                 {top}
@@ -118,25 +110,15 @@ function UserScores() {
     }
 }
 
-function GameOver({ws, setGameOver, setPlaying}) {
+function GameOver({startNewGame}) {
     return (
-        <Card>
-            <CardHeader>
-                Game Over!
-            </CardHeader>
-            <CardBody>
-                Play again!
-                <Button onClick={() => playAgain("single")}>Single-player</Button>
-                {
-                    localStorage.getItem('auth') != null && <Button onClick={() => playAgain("multi")}>Multi-player</Button>
-                }
-            </CardBody>
-        </Card>
+        <div>
+            <h3>GAME OVER</h3>
+            <h5>This is where it would say who won</h5>
+            <Button onClick={() => startNewGame("single")}>Single-player</Button>
+            {
+                localStorage.getItem('auth') != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
+            }
+        </div>
     )
-
-    function playAgain(gameType) {
-        ws.startGame(gameType)
-        setGameOver(false)
-        setPlaying(true)
-    }
 }

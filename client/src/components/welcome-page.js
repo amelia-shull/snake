@@ -3,17 +3,13 @@ import { TabMenu, TabMenuItem, Tab } from './tabs';
 import { Form, Input, Button, SecureInput } from './form';
 import { Card, CardHeader, CardBody } from './card';
 import { WebSocketClient } from '../web-socket';
-import axios from 'axios';
+import { Login, Signup } from './login-signup';
 
 const constants = require('../constants.js');
 
 const {
-    GAME
+    MAIN
 } = constants.MAIN_VIEWS
-
-const {
-    BASE_URL
-} = constants.URL
 
 const GUEST = "guest";
 const LOGIN = "login";
@@ -26,10 +22,10 @@ export default function WelcomePage({globalState}) {
     } = globalState;
    
     return (
-        <div style={{width: "40vw"}}>
+        <div style={{width: "50vw", height: "35vh"}}>
             <Card>
                 <CardHeader>
-                    Welcome to Snake!
+                    Welcome to Retro Snake!
                 </CardHeader>
                 <CardBody>
                     <TabMenu>
@@ -45,17 +41,19 @@ export default function WelcomePage({globalState}) {
                     </TabMenu>
                     {tabSelection === GUEST && (
                         <Tab>
+                            <p>Play as guest for single-player game.</p>
+                            <p>Login or sign up to play multi-player and track scores!</p>
                             <Guest globalState={globalState} connectWebSocket={connectWebSocket}/>
                         </Tab>
                     )}
                     {tabSelection === LOGIN && (
                         <Tab>
-                            <Login globalState={globalState} connectWebSocket={connectWebSocket}/>
+                            <Login globalState={globalState}/>
                         </Tab>
                     )}
                     {tabSelection === SIGNUP && (
                         <Tab>
-                            <Signup globalState={globalState} connectWebSocket={connectWebSocket}/>
+                            <Signup globalState={globalState}/>
                         </Tab>
                     )}
                 </CardBody>
@@ -71,8 +69,7 @@ export default function WelcomePage({globalState}) {
 
 function Guest({globalState, connectWebSocket}) {
     const {
-        setView,
-        setNickName
+        setView
     } = globalState
 
     const [inputText, setInputText] = useState("")
@@ -86,90 +83,7 @@ function Guest({globalState, connectWebSocket}) {
 
     function playAsGuest() {
         connectWebSocket(undefined)
-        setView(GAME)
-        setNickName(inputText)
-    }
-}
-
-function Login({globalState, connectWebSocket}) {
-    const {
-        setView,
-        setUsername,
-    } = globalState
-
-    const [inputText, setInputText] = useState("")
-    const [inputPassword, setTnputPassword] = useState("")
-
-    return (
-        <Form>
-            <Input setInputText={setInputText} label="Username"/>
-            <SecureInput setInputText={setTnputPassword} label="Password"/>
-            <Button onClick={playAsUser}>Login</Button>
-        </Form>
-    )
-
-    function playAsUser() {
-        const creds = {
-            password: inputPassword,
-            userName: inputText   
-        }
-        axios.post(
-            BASE_URL + 'sessions',
-            creds,
-            { headers: { 'Content-Type': 'application/json' } }
-        ).then(response => {
-            let auth = response.headers.authorization
-            localStorage.setItem('userID', response.data.id)
-            localStorage.setItem('auth', auth);
-            connectWebSocket(auth)
-            setView(GAME)
-            setUsername(inputText)
-        })
-        .catch(err =>{
-            console.log(err)
-        })
-    }
-}
-
-function Signup({globalState, connectWebSocket}) {
-    const {
-        setView,
-        setUsername,
-    } = globalState
-
-    const [inputText, setInputText] = useState("")
-    const [inputPassword, setTnputPassword] = useState("")
-    const [confPassword, setConfPassword] = useState("")
-
-    return (
-        <Form>
-            <Input setInputText={setInputText} label="Username"/>
-            <SecureInput setInputText={setTnputPassword} label="Password"/>
-            <SecureInput setInputText={setConfPassword} label="Type password again"/>
-            <Button onClick={createAccount}>Create Account</Button>
-        </Form>
-    )
-
-    function createAccount() {
-        const newUser = {
-            password: inputPassword,
-            passwordConf: confPassword,
-            userName: inputText   
-        }
-        axios.post(
-            BASE_URL + 'users',
-             newUser,
-            { headers: { 'Content-Type': 'application/json' } }
-        ).then(response => {
-            let auth = response.headers.authorization
-            connectWebSocket(auth)
-            localStorage.setItem('userID', response.data.id)
-            localStorage.setItem('auth', auth);
-            setView(GAME)
-            setUsername(inputText)
-        })
-        .catch(err =>{
-            console.log(err)
-        })
+        setView(MAIN)
+        localStorage.setItem("name", inputText)
     }
 }
