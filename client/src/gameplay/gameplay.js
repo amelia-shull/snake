@@ -14,10 +14,11 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore}) {
     
     if (gameState !== undefined) {
         parsedState = JSON.parse(gameState)
-        console.log(parsedState)
         if (parsedState.status === "active") {
             return (
-                <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                    <Sketch setup={setup} draw={draw} keyPressed={keyPressed}></Sketch>
+                </div>
             );
         } else {
             setGameOver(true)

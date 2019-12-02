@@ -3720,6 +3720,7 @@ button.section-black:focus {
      border-bottom: 2px solid #393939;
      border-radius: 0;
      background: #C0C0C0;
+     height: 100%;
  }
 
  .card-primary .card-header {
