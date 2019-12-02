@@ -13,6 +13,10 @@ const {
   WELCOME
 } = constants.MAIN_VIEWS
 
+const {
+    BASE_URL
+} = constants.URL
+
 const styleApp = {
   display: "flex",
   height: "100vh",
@@ -51,7 +55,7 @@ function App() {
         {
             localStorage.getItem('auth') != null && (
             <Button onClick={() => {
-                axios.delete("http://localhost:8844/sessions/", { 
+                axios.delete(BASE_URL + "sessions/", { 
                     headers: { 
                         'Authorization': localStorage.getItem('auth') 
                     }

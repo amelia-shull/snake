@@ -11,6 +11,10 @@ const {
     GAME
 } = constants.MAIN_VIEWS
 
+const {
+    BASE_URL
+} = constants.URL
+
 const GUEST = "guest";
 const LOGIN = "login";
 const SIGNUP = "signup";
@@ -110,7 +114,7 @@ function Login({globalState, connectWebSocket}) {
             userName: inputText   
         }
         axios.post(
-            'http://localhost:8844/sessions',
+            BASE_URL + 'sessions',
             creds,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
@@ -153,7 +157,7 @@ function Signup({globalState, connectWebSocket}) {
             userName: inputText   
         }
         axios.post(
-            'http://localhost:8844/users',
+            BASE_URL + 'users',
              newUser,
             { headers: { 'Content-Type': 'application/json' } }
         ).then(response => {
