@@ -1,6 +1,6 @@
 import React,  { useState } from 'react';
 import { TabMenu, TabMenuItem, Tab } from './tabs';
-import { Form, Input, Button, SecureInput } from './form';
+import { Form, Input, Button } from './form';
 import { Card, CardHeader, CardBody } from './card';
 import { WebSocketClient } from '../web-socket';
 import { Login, Signup } from './login-signup';

@@ -14,12 +14,23 @@ export default function GamePage({globalState}) {
     const [playing, setPlaying] = useState(false)
     const [gameOver, setGameOver] = useState(false)
     const [score, setScore] = useState(0);
+    const [opponentScore, setOpponentScore] = useState(undefined);
 
     if (!gameOver) {
         return (
             <div>
                 {!playing && <WaitingRoom setWS={setWS} startNewGame={startNewGame}/>}
-                {playing && <Gameplay setGameOver={setGameOver} setPlaying={setPlaying} setScore= {setScore} ws={ws}/>}
+                {playing && (
+                    <Gameplay 
+                        setGameOver={setGameOver}
+                        setPlaying={setPlaying}
+                        setScore= {setScore}
+                        score={score} 
+                        opponentScore={opponentScore}
+                        setOpponentScore={setOpponentScore}
+                        ws={ws}
+                    />
+                )}
             </div>
         )
     } else {
@@ -40,7 +51,7 @@ export default function GamePage({globalState}) {
                 console.log(err)
             })
         }
-        return <GameOver startNewGame={startNewGame}/>
+        return <GameOver startNewGame={startNewGame} score={score} opponentScore={opponentScore}/>
     }
 
     function startNewGame(gameType){
@@ -104,11 +115,15 @@ function UserScores() {
     }
 }
 
-function GameOver({startNewGame}) {
+function GameOver({startNewGame, score, opponentScore}) {
     return (
         <div>
             <h3>GAME OVER</h3>
             <h5>This is where it would say who won</h5>
+            <br/>
+            <h7>{`Your score: ${score}`}</h7>
+            <br/>
+            { opponentScore != undefined && <h7>{`Opponent's score: ${opponentScore}`}</h7>}
             <Button onClick={() => startNewGame("single")}>Single-player</Button>
             {
                 localStorage.getItem('auth') != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
