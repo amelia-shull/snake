@@ -56,6 +56,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/scores", ctx.ScoresHandler)
+	router.HandleFunc("/scores/", ctx.SpecificScoresHandler)
 	router.HandleFunc("/scores/{userID}", ctx.SpecificScoresHandler)
 	router.HandleFunc("/users", ctx.UsersHandler)
 	router.HandleFunc("/sessions", ctx.SessionsHandler)

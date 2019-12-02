@@ -13,7 +13,7 @@ export default function MainPage({globalState}) {
 
 
     return (
-        <div style={{width: "80vw", height: "90vh"}}>
+        <div style={{width: "1000px", height: "730px"}}>
             <Card>
                 <CardHeader>
                     Retro Snake

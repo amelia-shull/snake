@@ -23,11 +23,13 @@ export function Login({globalState}) {
         setWS
     } = globalState
 
+    const [err, setErr] = useState(undefined)
     const [inputText, setInputText] = useState("")
     const [inputPassword, setTnputPassword] = useState("")
 
     return (
         <Form>
+            <p>{err != undefined ? err : ""}</p>
             <Input setInputText={setInputText} label="Username"/>
             <SecureInput setInputText={setTnputPassword} label="Password"/>
             <Button onClick={playAsUser}>Login</Button>
@@ -39,6 +41,7 @@ export function Login({globalState}) {
             password: inputPassword,
             userName: inputText   
         }
+        setErr(undefined)
         axios.post(
             BASE_URL + 'sessions',
             creds,
@@ -52,7 +55,11 @@ export function Login({globalState}) {
             setView(MAIN)
         })
         .catch(err =>{
-            console.log(err)
+            if (err.response.status === 401) {
+                setErr("Invalid login credentials, please try again.")
+            } else {
+                setErr("Something went wrong, please try again later.")
+            }
         })
     }
 }
@@ -63,12 +70,14 @@ export function Signup({globalState}) {
         setWS
     } = globalState
 
+    const [err, setErr] = useState(undefined)
     const [inputText, setInputText] = useState("")
     const [inputPassword, setTnputPassword] = useState("")
     const [confPassword, setConfPassword] = useState("")
 
     return (
         <Form>
+            <p>{err != undefined ? err : ""}</p>
             <Input setInputText={setInputText} label="Username"/>
             <SecureInput setInputText={setTnputPassword} label="Password"/>
             <SecureInput setInputText={setConfPassword} label="Type password again"/>
@@ -81,6 +90,7 @@ export function Signup({globalState}) {
             passwordConf: confPassword,
             userName: inputText   
         }
+        setErr(undefined)
         axios.post(
             BASE_URL + 'users',
              newUser,
@@ -94,7 +104,14 @@ export function Signup({globalState}) {
             setView(MAIN)
         })
         .catch(err =>{
-            console.log(err)
+            console.log(err.response.data)
+            if (err.response.status == 400) {
+                setErr("Username can't have spaces and password must be >= 6 characters long.")
+            } else if (err.response.status == 409) { 
+                setErr("Username is already taken, please try again.")
+            } else {
+                setErr("Something went wrong, please try again later.")
+            }
         })
     }
 }

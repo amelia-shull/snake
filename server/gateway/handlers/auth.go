@@ -35,7 +35,7 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	dec := json.NewDecoder(r.Body)
 	// check that request body can be encoded into users.NewUser struct
 	if err := dec.Decode(newUser); err != nil {
-		http.Error(w, "Decoding failed", http.StatusBadRequest)
+		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	}
 	user, err = ctx.UserStore.Insert(user)
 	if err != nil {
-		http.Error(w, "Can't insert to store", http.StatusBadRequest)
+		http.Error(w, "Can't insert to store", http.StatusConflict)
 		return
 	}
 

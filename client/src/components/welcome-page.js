@@ -22,7 +22,7 @@ export default function WelcomePage({globalState}) {
     } = globalState;
    
     return (
-        <div style={{width: "50vw", height: "35vh"}}>
+        <div style={{width: "650px", height: "330px"}}>
             <Card>
                 <CardHeader>
                     Welcome to Retro Snake!
