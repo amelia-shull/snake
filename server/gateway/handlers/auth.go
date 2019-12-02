@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
@@ -43,7 +42,6 @@ func (ctx *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) 
 	// ensure valid new user and converts to user
 	user, err := newUser.ToUser()
 	if err != nil {
-		log.Println(err)
 		http.Error(w, "Invalid new user", http.StatusBadRequest)
 		return
 	}
@@ -143,11 +141,11 @@ func (ctx *HandlerContext) SpecificSessionsHandler(w http.ResponseWriter, r *htt
 		http.Error(w, "Method must be DELETE", http.StatusMethodNotAllowed)
 		return
 	}
-
-	// Get URL and make sure it's valid
-	url := r.URL.Path
-	if url != "/sessions/mine" {
-		http.Error(w, "Access forbidden", http.StatusForbidden)
+	// check if current user is authenticated; return status forbidden if not
+	sessionState := &SessionState{}
+	_, err := sessions.GetState(r, ctx.SigningKey, ctx.SessionStore, sessionState)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusForbidden)
 		return
 	}
 

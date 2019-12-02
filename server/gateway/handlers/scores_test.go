@@ -42,7 +42,7 @@ func TestPostScores(t *testing.T) {
 			func() *bytes.Buffer {
 				validScore := &users.Score{
 					Score:   100,
-					UserID:  user.ID,
+					UserID:  int(user.ID),
 					Created: time.Now(),
 				}
 				validBody, _ := json.Marshal(validScore)
@@ -95,27 +95,27 @@ func TestGetScores(t *testing.T) {
 		},
 		users.Score{
 			Score:   100,
-			UserID:  user.ID,
+			UserID:  int(user.ID),
 			Created: timeNow.Add(time.Minute * time.Duration(1)),
 		},
 		users.Score{
 			Score:   300,
-			UserID:  user.ID,
+			UserID:  int(user.ID),
 			Created: timeNow.Add(time.Minute * time.Duration(2)),
 		},
 		users.Score{
 			Score:   400,
-			UserID:  user.ID,
+			UserID:  int(user.ID),
 			Created: timeNow.Add(time.Minute * time.Duration(3)),
 		},
 		users.Score{
 			Score:   500,
-			UserID:  user.ID,
+			UserID:  int(user.ID),
 			Created: timeNow.Add(time.Minute * time.Duration(4)),
 		},
 		users.Score{
 			Score:   200,
-			UserID:  user.ID,
+			UserID:  int(user.ID),
 			Created: timeNow.Add(time.Minute * time.Duration(5)),
 		},
 	}
@@ -140,12 +140,12 @@ func TestGetScores(t *testing.T) {
 			[]users.Score{
 				users.Score{
 					Score:   500,
-					UserID:  user.ID,
+					UserID:  int(user.ID),
 					Created: timeNow.Add(time.Minute * time.Duration(4)),
 				},
 				users.Score{
 					Score:   400,
-					UserID:  user.ID,
+					UserID:  int(user.ID),
 					Created: timeNow.Add(time.Minute * time.Duration(3)),
 				},
 			},
@@ -156,12 +156,12 @@ func TestGetScores(t *testing.T) {
 			[]users.Score{
 				users.Score{
 					Score:   200,
-					UserID:  user.ID,
+					UserID:  int(user.ID),
 					Created: timeNow.Add(time.Minute * time.Duration(5)),
 				},
 				users.Score{
 					Score:   500,
-					UserID:  user.ID,
+					UserID:  int(user.ID),
 					Created: timeNow.Add(time.Minute * time.Duration(4)),
 				},
 			},
