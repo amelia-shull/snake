@@ -16,9 +16,9 @@ export function GameScores() {
 
     return (
         <div>
-            <ul>
+            <ol>
                 {top}
-            </ul>
+            </ol>
         </div>
     )
 
@@ -73,7 +73,7 @@ export function UserRecentScores() {
 function formatUserPoints(input) {
     let date = new Date(input.created)
     let dashes = " ----------------------- "
-    return input.score + dashes + date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear()
+    return input.score + dashes + date.getMonth() + "/" + date.getDate() + "/" + date.getYear()
 }
 
 function formatTopPoints(input) {
