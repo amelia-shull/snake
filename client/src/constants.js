@@ -1,7 +1,10 @@
 module.exports = Object.freeze({
     MAIN_VIEWS: {
         WELCOME: 'welcome',
-        MAIN: 'main'
+        MAIN: 'main',
+        GAME: "game",
+        SCORES: "scores",
+        PROFILE: "profile"
     },
     URL : {
         // BASE_URL: 'http://snakeapi.katekaseth.me/',
