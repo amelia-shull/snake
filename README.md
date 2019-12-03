@@ -7,7 +7,7 @@ INFO 441 Final Project
 Websocket will connect when the client joins the waiting room (game tab). The client sends the `auth` token recieved from the `/session` endpoint. 
 
 The client can then send the following data to the server through the websocket connection:
-``` JSON
+``` Javascript
 // Lets the server know to start the game or add the player
 // to the waiting room
 {
@@ -24,7 +24,7 @@ The client can then send the following data to the server through the websocket 
 ```
 
 The server sends the following data to the client:
-``` JSON
+``` Javascript
 	status: "active" | "over",
 	players: [
 		{
