@@ -2,6 +2,49 @@
 INFO 441 Final Project
 
 ## Endpoints
+- `POST /scores` : adds user's score to database
+  - Request body:
+	``` Javascript
+	{
+		score: (score),
+		userID: (userID)
+	}
+	```
+	- Responses:
+  	- `200`: score added successfully
+  	- `400`: Decoding failed
+  	- `401`: User not authenticated, User not authorized
+  	- 
+
+- `GET /scores/` : gets top 10 (default) scores of all players
+  - `?top=n` : encodes the top n scores
+
+- `GET /scores/{userID}` : gets all scores of specific player
+  - `?top=n` : encodes the top n scores
+  - `?recent=n` : encodes n most recent scores
+
+- `POST /users` : creates new user accounts
+  - Request body:
+	``` Javascript
+	{
+		userName: (userName),
+		password: (password),
+		passwordConf: (password typed again)
+	}
+	```
+  - Response body:
+	```
+	{
+		userID: (userID),
+		userName: (userName)
+	}
+	```
+
+- `/sessions`
+
+- `/sessions/`
+
+- `/`
 
 ## WebSocket Messages
 Websocket will connect when the client joins the waiting room (game tab). The client sends the `auth` token recieved from the `/session` endpoint. 
