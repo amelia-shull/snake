@@ -50,7 +50,7 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "User not authorized", http.StatusUnauthorized)
 		return
 	}
-	timeNow, err := time.Parse("2006-01-02T15:04:05Z", time.Now().Format(time.RFC3339))
+	timeNow, err := time.Parse("2006-01-02T15:04:05-08:00", time.Now().Format(time.RFC3339))
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Error adding score", http.StatusInternalServerError)
@@ -92,8 +92,9 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 		// return all 10 scores or the top n scores if top query is specified
 		topN := r.URL.Query().Get("top")
 		if topN == "" {
-			scores, err = ctx.UserStore.GetTopScores(10)
+			scores, err = ctx.UserStore.GetTopScoresUserName(10)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -105,6 +106,7 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			}
 			scores, err = ctx.UserStore.GetTopScores(n)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -127,6 +129,7 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return all scores by userID
 			scores, err = ctx.UserStore.GetAllScoresByUserID(userID)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -139,6 +142,7 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return top n scores
 			scores, err = ctx.UserStore.GetTopNScoresByUserID(userID, n)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -151,6 +155,7 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return 5 recent scores
 			scores, err = ctx.UserStore.GetNRecentScoresByUserID(userID, n)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
