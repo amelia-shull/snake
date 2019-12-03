@@ -1,4 +1,8 @@
+sudo service docker start
+
 docker rm -f client
+docker system prune --all -f
+docker system prune --volumes -f
 
 docker pull kateks/client
 docker run -d \

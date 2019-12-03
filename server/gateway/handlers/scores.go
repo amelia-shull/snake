@@ -50,7 +50,7 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "User not authorized", http.StatusUnauthorized)
 		return
 	}
-	timeNow, err := time.Parse("2006-01-02T15:04:05-08:00", time.Now().Format(time.RFC3339))
+	timeNow, err := time.Parse("2006-01-02T15:04:05Z", time.Now().Format(time.RFC3339))
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Error adding score", http.StatusInternalServerError)

@@ -119,7 +119,7 @@ func updateWaitingRoom(ws *websocket.Conn, userID string) {
 
 func startGame(game *Game) {
 	log.Println("start game")
-	ticker := time.NewTicker(150 * time.Millisecond)
+	ticker := time.NewTicker(300 * time.Millisecond)
 	quit := make(chan bool)
 
 	go func(game *Game) {

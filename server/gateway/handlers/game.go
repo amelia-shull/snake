@@ -126,6 +126,33 @@ func (gameData *GameData) UpdateGame() (*GameData, bool) {
 
 		gameData.Players[index].Body = body
 	}
+	if len(gameData.Players) > 1 {
+		body1 := gameData.Players[0].Body
+		body2 := gameData.Players[1].Body
+
+		// test player 1 hitting player 2
+		for i := 0; i < len(body2); i++ {
+			if body1[0] == body2[i] {
+				gameData.Status = "over"
+				if gameData.FinalStatus != "" {
+					gameData.FinalStatus = "tie"
+				} else {
+					gameData.FinalStatus = gameData.Players[0].UserID
+				}
+			}
+		}
+		// test player 2 hitting player 1
+		for i := 0; i < len(body1); i++ {
+			if body2[0] == body1[i] {
+				gameData.Status = "over"
+				if gameData.FinalStatus != "" {
+					gameData.FinalStatus = "tie"
+				} else {
+					gameData.FinalStatus = gameData.Players[1].UserID
+				}
+			}
+		}
+	}
 	return gameData, gameData.Status == "active"
 }
 
