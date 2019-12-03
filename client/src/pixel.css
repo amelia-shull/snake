@@ -3727,6 +3727,10 @@ button.section-black:focus {
     background: #C0C0C0;
  }
 
+ .card-secondary, .card-tertiary {
+    height: auto;
+ }
+
  .card-secondary .card-header {
      background: #008081;
      color: white;
