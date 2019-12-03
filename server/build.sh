@@ -6,5 +6,3 @@ go clean
 cd ../db
 docker build -t kateks/user-store .
 docker push kateks/user-store
-
-cd ../gateway
