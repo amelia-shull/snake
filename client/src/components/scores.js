@@ -16,7 +16,6 @@ export function GameScores() {
 
     return (
         <div>
-            <p>High Scores:</p>
             <ul>
                 {top}
             </ul>
@@ -25,7 +24,7 @@ export function GameScores() {
 
     async function getTopScore() {
         const res = await axios.get(BASE_URL + 'scores/')
-        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
+        return res.data ? res.data.map((score, index) => <li key={index}>{formatTopPoints(score)}</li>) : <></>
     }
 }
 
@@ -46,7 +45,7 @@ export function UserTopScores() {
 
     async function getTopScore() {
         const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?top=5")
-        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
+        return res.data ? res.data.map((score, index) => <li key={index}>{formatUserPoints(score)}</li>) : <></>
     }
 }
 
@@ -67,6 +66,17 @@ export function UserRecentScores() {
     
     async function getRecentScore() {
         const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?recent=5")
-        return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
+        return res.data ? res.data.map((score, index) => <li key={index}>{formatUserPoints(score)}</li>) : <></>
     }
+}
+
+function formatUserPoints(input) {
+    let date = new Date(input.created)
+    let dashes = " ----------------------- "
+    return input.score + dashes + date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear()
+}
+
+function formatTopPoints(input) {
+    let dashes = " ----------------------- "
+    return input.score + dashes + input.userName
 }

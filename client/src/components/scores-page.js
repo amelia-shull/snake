@@ -9,7 +9,7 @@ export default function ScoresPage() {
             <div style={{width: "300px"}}>
                 <Card cardTheme="card-tertiary">
                     <CardHeader>
-                        Top Scores
+                        Top 10 Players
                     </CardHeader>
                     <CardBody>
                         <GameScores/>
@@ -19,7 +19,7 @@ export default function ScoresPage() {
             <div style={{display: "flex", flexDirection: "column", width: "300px"}}>
                 <Card cardTheme="card-tertiary">
                     <CardHeader>
-                        Your Top Scores
+                        Your 5 Top Scores
                     </CardHeader>
                     <CardBody>
                         <UserTopScores/>
@@ -28,7 +28,7 @@ export default function ScoresPage() {
                 <br/>
                 <Card cardTheme="card-tertiary">
                     <CardHeader>
-                        Your Recent Scores
+                        Your 5 Recent Scores
                     </CardHeader>
                     <CardBody>
                         <UserRecentScores/>
