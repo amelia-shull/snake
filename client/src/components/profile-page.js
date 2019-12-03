@@ -23,7 +23,7 @@ export default function ProfilePage({globalState}) {
         return (
             <div>
                 <h6>{`${localStorage.getItem("name")}'s profile`}</h6>
-                <Button onClick={() => {
+                <Button buttonLocation="justify-content-start" onClick={() => {
                     axios.delete(BASE_URL + "sessions/", { 
                         headers: { 
                             'Authorization': localStorage.getItem('auth') 
