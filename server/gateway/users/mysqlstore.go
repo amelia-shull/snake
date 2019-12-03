@@ -105,7 +105,11 @@ func (ms *MySQLStore) InsertScore(score *Score) (*Score, error) {
 
 //GetAllScoresByUserID returns an array of Score made by the given userID
 func (ms *MySQLStore) GetAllScoresByUserID(userID int) (*[]Score, error) {
-	rows, err := ms.Db.Query("select * from scores where userID = ?", userID)
+	rows, err := ms.Db.Query(`
+		SELECT s.id, s.score, s.userID, u.username, s.created 
+		FROM scores AS s
+		JOIN users AS u ON s.userID = u.id
+		WHERE s.userID = ?`, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +118,12 @@ func (ms *MySQLStore) GetAllScoresByUserID(userID int) (*[]Score, error) {
 
 //GetTopNScoresByUserID returns an array of top N Score made by the given userID
 func (ms *MySQLStore) GetTopNScoresByUserID(userID int, n int) (*[]Score, error) {
-	rows, err := ms.Db.Query("select * from scores where userID = ? order by score desc limit ?", userID, n)
+	rows, err := ms.Db.Query(`
+		SELECT s.id, s.score, s.userID, u.username, s.created 
+		FROM scores as s
+		JOIN users AS u ON s.userID = u.id 
+		WHERE s.userID = ? 
+		ORDER BY score desc limit ?`, userID, n)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +132,12 @@ func (ms *MySQLStore) GetTopNScoresByUserID(userID int, n int) (*[]Score, error)
 
 //GetNRecentScoresByUserID returns an array of top N Score made by the given userID
 func (ms *MySQLStore) GetNRecentScoresByUserID(userID int, n int) (*[]Score, error) {
-	rows, err := ms.Db.Query("select * from scores where userID = ? order by created desc limit ?", userID, n)
+	rows, err := ms.Db.Query(`
+		SELECT s.id, s.score, s.userID, u.username, s.created 
+		FROM scores AS s
+		JOIN users AS u ON s.userID = u.id 
+		WHERE s.userID = ? 
+		ORDER BY created desc limit ?`, userID, n)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +146,24 @@ func (ms *MySQLStore) GetNRecentScoresByUserID(userID int, n int) (*[]Score, err
 
 //GetTopScores returns an array of top N Score made
 func (ms *MySQLStore) GetTopScores(n int) (*[]Score, error) {
-	rows, err := ms.Db.Query("select * from scores order by score desc limit ?", n)
+	rows, err := ms.Db.Query(`
+		SELECT s.id, s.score, s.userID, u.username, s.created 
+		FROM scores AS s
+		JOIN users AS u ON s.userID = u.id 
+		ORDER BY score desc limit ?`, n)
+	if err != nil {
+		return nil, err
+	}
+	return scanRows(rows)
+}
+
+//GetTopScoresUserName returns an array of top N Score made with username
+func (ms *MySQLStore) GetTopScoresUserName(n int) (*[]Score, error) {
+	rows, err := ms.Db.Query(`
+		SELECT s.id, s.score, s.userID, u.username, s.created
+		FROM scores AS s 
+		JOIN users AS u ON s.userID = u.id 
+		ORDER BY score desc limit ?`, n)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +174,7 @@ func scanRows(rows *sql.Rows) (*[]Score, error) {
 	var scores []Score
 	for rows.Next() {
 		score := Score{}
-		err := rows.Scan(&score.ID, &score.Score, &score.UserID, &score.Created)
+		err := rows.Scan(&score.ID, &score.Score, &score.UserID, &score.UserName, &score.Created)
 		if err != nil {
 			return nil, err
 		}

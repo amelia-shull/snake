@@ -34,10 +34,11 @@ type NewUser struct {
 
 //Score represents a score entry in the database
 type Score struct {
-	ID      int64     `json:"-"`
-	Score   int       `json:"score"`
-	UserID  int       `json:"userID"`
-	Created time.Time `json:"created"`
+	ID       int64     `json:"-"`
+	Score    int       `json:"score"`
+	UserID   int       `json:"userID"`
+	UserName string    `json:"userName"`
+	Created  time.Time `json:"created"`
 }
 
 // Equals determines if two users are the same
