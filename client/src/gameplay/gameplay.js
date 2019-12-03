@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardBody } from '../components/card';
 import Sketch from 'react-p5';
 
-export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponentScore, setOpponentScore}) {
+export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponentScore, setOpponentScore, setLoser}) {
     const [gameState, setGameState] = useState(undefined);
     const userID = localStorage.getItem("userID")
     var parsedState;
@@ -27,6 +27,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
                 </div>
             );
         } else {
+            setLoser(parsedState.finalStatus)
             setGameOver(true)
             setPlaying(false)
         }
