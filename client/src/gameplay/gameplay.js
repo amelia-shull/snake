@@ -65,7 +65,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
                 p5.rect(point.x, point.y, 1, 1);
             })
             // set score for this user
-            if (player.userID === userID) {
+            if (player.userID === userID || player.userID === "guest") {
                 setScore(player.score)
             } else {
                 setOpponentScore(player.score)

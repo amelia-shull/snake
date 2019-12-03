@@ -17,7 +17,7 @@ function connectWebSocket(auth, setWS) {
     setWS(ws)
 }
 
-export function Login({globalState}) {
+export function Login({globalState, setLoggedIn}) {
     const {
         setView,
         setWS
@@ -52,6 +52,9 @@ export function Login({globalState}) {
             localStorage.setItem('auth', auth);
             localStorage.setItem('name', inputText);
             connectWebSocket(auth, setWS)
+            if (setLoggedIn) {
+                setLoggedIn(true)
+            }
             setView(MAIN)
         })
         .catch(err =>{
@@ -64,7 +67,7 @@ export function Login({globalState}) {
     }
 }
 
-export function Signup({globalState}) {
+export function Signup({globalState, setLoggedIn}) {
     const {
         setView,
         setWS
@@ -101,6 +104,9 @@ export function Signup({globalState}) {
             localStorage.setItem('userID', response.data.id)
             localStorage.setItem('auth', auth);
             localStorage.setItem('name', inputText);
+            if (setLoggedIn) {
+                setLoggedIn(true)
+            }
             setView(MAIN)
         })
         .catch(err =>{
