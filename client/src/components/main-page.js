@@ -5,13 +5,16 @@ import GamePage from './game-page';
 import ScoresPage from './scores-page';
 import ProfilePage from './profile-page';
 
+const constants = require('../constants.js');
+
+const {
+    GAME,
+    SCORES,
+    PROFILE
+} = constants.MAIN_VIEWS
+
 export default function MainPage({globalState}) {
-
-    const GAME = "game";
-    const SCORES = "scores";
-    const PROFILE = "profile";
     const [tabSelection, setTabSelection] = useState(GAME)
-
 
     return (
         <div style={{width: "1000px", height: "730px"}}>
@@ -38,7 +41,7 @@ export default function MainPage({globalState}) {
                     )}
                     {tabSelection === SCORES && (
                         <Tab>
-                            <ScoresPage globalState={globalState}/>
+                            <ScoresPage setTabSelection={setTabSelection}/>
                         </Tab>
                     )}
                     {tabSelection === PROFILE && (
