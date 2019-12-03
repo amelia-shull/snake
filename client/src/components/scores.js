@@ -23,7 +23,7 @@ export function GameScores() {
     )
 
     async function getTopScore() {
-        const res = await axios.get(BASE_URL + 'scores/')
+        const res = await axios.get(BASE_URL + 'scores/?top=20')
         return res.data ? res.data.map((score, index) => <li key={index}>{formatTopPoints(score)}</li>) : <></>
     }
 }
