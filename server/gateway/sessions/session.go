@@ -19,8 +19,6 @@ var ErrInvalidScheme = errors.New("authorization scheme not supported")
 //BeginSession creates a new SessionID, saves the `sessionState` to the store, adds an
 //Authorization header to the response with the SessionID, and returns the new SessionID
 func BeginSession(signingKey string, store Store, sessionState interface{}, w http.ResponseWriter) (SessionID, error) {
-	//TODO:
-	//- create a new SessionID
 	sid, err := NewSessionID(signingKey)
 	if err != nil {
 		return InvalidSessionID, err

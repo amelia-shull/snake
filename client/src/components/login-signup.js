@@ -110,7 +110,6 @@ export function Signup({globalState, setLoggedIn}) {
             setView(MAIN)
         })
         .catch(err =>{
-            console.log(err.response.data)
             if (err.response.status == 400) {
                 setErr("Username can't have spaces and password must be >= 6 characters long.")
             } else if (err.response.status == 409) { 

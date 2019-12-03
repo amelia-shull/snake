@@ -53,9 +53,7 @@ export default function GamePage({globalState}) {
                 BASE_URL + 'scores',
                 requestBody,
                 { headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('auth') } }
-            ).then(response => {
-                console.log(response)
-            })
+            )
             .catch(err =>{
                 console.log(err)
             })

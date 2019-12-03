@@ -50,14 +50,13 @@ func (ctx *HandlerContext) WsHandler(w http.ResponseWriter, r *http.Request) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, "Cannot upgrade to websocket", http.StatusInternalServerError)
 		return
 	}
 
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
-			log.Println(err)
 			// Removes players from game if one leaves
 			if players[ws] != nil {
 				players[ws].GameData.Status = "over"
@@ -79,7 +78,7 @@ func (ctx *HandlerContext) WsHandler(w http.ResponseWriter, r *http.Request) {
 		var res webSocketData
 		err = json.Unmarshal(message, &res)
 		if err != nil {
-			log.Println(err)
+			http.Error(w, "Cannot read json", http.StatusInternalServerError)
 		}
 
 		if res.Action == "startGame" {
