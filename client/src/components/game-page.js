@@ -105,7 +105,7 @@ function GameOver({startNewGame, score, opponentScore, loser, gameType}) {
         <div>
             <h3>GAME OVER</h3>
             {
-                gameType == "multi" && <h5>{loser == userID ? "You lost..." : "You won!"}</h5>
+                gameType == "multi" && <h5>{loser == userID ? "You lost..." : loser == "tie" ? "It's a tie!" : "You won!"}</h5>
             }
             <br/>
             <h7>{`Your score: ${score}`}</h7>
