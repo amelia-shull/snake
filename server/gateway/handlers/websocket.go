@@ -61,6 +61,11 @@ func (ctx *HandlerContext) WsHandler(w http.ResponseWriter, r *http.Request) {
 			// Removes players from game if one leaves
 			if players[ws] != nil {
 				players[ws].GameData.Status = "over"
+				for _, conn := range players[ws].Players {
+					if conn.Ws == ws {
+						players[ws].GameData.FinalStatus = conn.UserID
+					}
+				}
 				delete(players, ws)
 				log.Println("removing player, ws close")
 			}

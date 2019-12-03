@@ -74,26 +74,46 @@ func (gameData *GameData) UpdateGame() (*GameData, bool) {
 		// Game over if touch edge
 		if body[0].X == -1 && player.Direction == left {
 			gameData.Status = "over"
-			gameData.FinalStatus = string(index) + " loses"
+			if gameData.FinalStatus != "" {
+				gameData.FinalStatus = "tie"
+			} else {
+				gameData.FinalStatus = player.UserID
+			}
 		}
 		if body[0].X == size && player.Direction == right {
 			gameData.Status = "over"
-			gameData.FinalStatus = string(index) + " loses"
+			if gameData.FinalStatus != "" {
+				gameData.FinalStatus = "tie"
+			} else {
+				gameData.FinalStatus = player.UserID
+			}
 		}
 		if body[0].Y == -1 && player.Direction == up {
 			gameData.Status = "over"
-			gameData.FinalStatus = string(index) + " loses"
+			if gameData.FinalStatus != "" {
+				gameData.FinalStatus = "tie"
+			} else {
+				gameData.FinalStatus = player.UserID
+			}
 		}
 		if body[0].Y == size && player.Direction == down {
 			gameData.Status = "over"
-			gameData.FinalStatus = string(index) + " loses"
+			if gameData.FinalStatus != "" {
+				gameData.FinalStatus = "tie"
+			} else {
+				gameData.FinalStatus = player.UserID
+			}
 		}
 
 		for i := 0; i < len(body); i++ {
 			for j := 0; j < len(body); j++ {
 				if i != j && body[i].equals(&body[j]) {
 					gameData.Status = "over"
-					gameData.FinalStatus = string(index) + " loses"
+					if gameData.FinalStatus != "" {
+						gameData.FinalStatus = "tie"
+					} else {
+						gameData.FinalStatus = player.UserID
+					}
 				}
 			}
 		}
