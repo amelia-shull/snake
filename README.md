@@ -25,6 +25,7 @@ The client can then send the following data to the server through the websocket 
 
 The server sends the following data to the client:
 ``` Javascript
+{
 	status: "active" | "over",
 	players: [
 		{
@@ -37,6 +38,7 @@ The server sends the following data to the client:
 	food: {(xCoord), (yCoord)},
 	size: (size of pixels)
 	finalStatus: (userID of loser) | "tie" | ""
+}
 ```
 For a single player game, the `players` array will only contain one element, for multi-player it would contain two. The `body` array contains points representing the location of the player's snake, the 0 element being the head. The `food` field contains a single point representing where the food is located. 
 
