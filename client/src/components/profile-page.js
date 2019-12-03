@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from './form';
 import { Login, Signup } from './login-signup';
 import axios from 'axios';
@@ -17,7 +17,7 @@ export default function ProfilePage({globalState}) {
         setView
     } = globalState;
 
-    var loggedIn = localStorage.getItem('auth') != null
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem('auth') != null)
 
     if (loggedIn) {
         return (
@@ -38,12 +38,12 @@ export default function ProfilePage({globalState}) {
         );
     } else {
         return (
-            <NotAuthorized globalState={globalState}/>
+            <NotAuthorized globalState={globalState} setLoggedIn={setLoggedIn}/>
         );
     }
 }
 
-function NotAuthorized({globalState}) {
+function NotAuthorized({globalState, setLoggedIn}) {
     const [register, setRegister] = useState(false);
     return (
         <div>
@@ -54,7 +54,7 @@ function NotAuthorized({globalState}) {
                         <div style={{display: "flex", justifyContent: "left"}}>
                             <Button onClick={() => setRegister(!register)}>I already have an account</Button>
                         </div>
-                        <Signup globalState={globalState}/>
+                        <Signup globalState={globalState} setLoggedIn={setLoggedIn}/>
                     </div>
                 )
             }
@@ -64,7 +64,7 @@ function NotAuthorized({globalState}) {
                         <div style={{display: "flex", justifyContent: "left"}}>
                             <Button onClick={() => setRegister(!register)}>I don't have an account</Button>
                         </div>
-                        <Login globalState={globalState}/>
+                        <Login globalState={globalState} setLoggedIn={setLoggedIn}/>
                     </div>
                 )
             }
