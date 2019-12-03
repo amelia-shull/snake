@@ -29,24 +29,17 @@ export function GameScores() {
     }
 }
 
-export function UserScores() {
+export function UserTopScores() {
     const [top, setTop] = useState(undefined)
-    const [recent, setRecent] = useState(undefined)
 
     useEffect(() => {
         getTopScore().then(res => { setTop(res) })
-        getRecentScore().then(res => { setRecent(res) })
     },[])
 
     return (
         <div>
-            <p>Your top scores:</p>
             <ul>
                 {top}
-            </ul>
-            <p>Your recent scores:</p>
-            <ul>
-                {recent}
             </ul>
         </div>
     )
@@ -55,7 +48,23 @@ export function UserScores() {
         const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?top=5")
         return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>
     }
+}
 
+export function UserRecentScores() {
+    const [recent, setRecent] = useState(undefined)
+
+    useEffect(() => {
+        getRecentScore().then(res => { setRecent(res) })
+    },[])
+
+    return (
+        <div>
+            <ul>
+                {recent}
+            </ul>
+        </div>
+    )
+    
     async function getRecentScore() {
         const res = await axios.get(BASE_URL + 'scores/' + localStorage.getItem('userID') + "?recent=5")
         return res.data ? res.data.map((score, index) => <li key={index}>{score.score}</li>) : <></>

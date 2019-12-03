@@ -26,9 +26,10 @@ export function SecureInput({label, setInputText}) {
     )  
 }
 
-export function Button({children, onClick}) {
+export function Button({children, onClick, buttonLocation}) {
+    let className = buttonLocation != null ? buttonLocation : "justify-content-end";
     return (
-        <div className="d-flex justify-content-end">
+        <div className={`d-flex ${className}`}>
             <button onClick={onClick} className="btn mr-2 mb-2 btn-primary" type="button">
                 <span className="btn-text">{children}</span>
             </button>

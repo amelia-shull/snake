@@ -3,7 +3,7 @@ import { Button } from './form';
 import { Gameplay } from '../gameplay/gameplay';
 import { WebSocketClient } from '../web-socket';
 import axios from 'axios';
-import { UserScores } from './scores';
+import { UserRecentScores } from './scores';
 
 const constants = require('../constants.js');
 
@@ -78,12 +78,17 @@ function WaitingRoom({setWS, startNewGame}) {
             <h6>{`Welcome ${localStorage.getItem("name")}!`}</h6>
 
             {
-                localStorage.getItem('auth') != null && <UserScores></UserScores>
+                localStorage.getItem('auth') != null && (
+                    <div>
+                        <h7>Your recent scores:</h7>
+                        <UserRecentScores/>
+                    </div>
+                )
             }
             <p>Click button when you are ready to play!</p>
-            <Button onClick={() => startNewGame("single")}>Single-player</Button>
+            <Button buttonLocation="justify-content-start" onClick={() => startNewGame("single")}>Single-player</Button>
             {
-                localStorage.getItem('auth') != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
+                localStorage.getItem('auth') != null && <Button buttonLocation="justify-content-start" onClick={() => startNewGame("multi")}>Multi-player</Button>
             }
         </div>
     )

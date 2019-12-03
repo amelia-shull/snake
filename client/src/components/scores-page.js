@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserScores, GameScores } from './scores';
+import { UserTopScores, UserRecentScores, GameScores } from './scores';
 import { Card, CardHeader, CardBody } from './card';
 
 
@@ -22,7 +22,7 @@ export default function ScoresPage() {
                         Your Top Scores
                     </CardHeader>
                     <CardBody>
-                        <UserScores/>
+                        <UserTopScores/>
                     </CardBody>
                 </Card>
                 <br/>
@@ -31,7 +31,7 @@ export default function ScoresPage() {
                         Your Recent Scores
                     </CardHeader>
                     <CardBody>
-                        <UserScores/>
+                        <UserRecentScores/>
                     </CardBody>
                 </Card>
             </div>
