@@ -21,6 +21,8 @@ export default function GamePage({globalState}) {
     const [gameOver, setGameOver] = useState(false)
     const [score, setScore] = useState(0);
     const [opponentScore, setOpponentScore] = useState(undefined);
+    const [loser, setLoser] = useState(undefined);
+    const [gameType, setGameType] = useState(undefined);
 
     if (!gameOver) {
         return (
@@ -34,6 +36,7 @@ export default function GamePage({globalState}) {
                         score={score} 
                         opponentScore={opponentScore}
                         setOpponentScore={setOpponentScore}
+                        setLoser={setLoser}
                         ws={ws}
                     />
                 )}
@@ -57,10 +60,11 @@ export default function GamePage({globalState}) {
                 console.log(err)
             })
         }
-        return <GameOver startNewGame={startNewGame} score={score} opponentScore={opponentScore}/>
+        return <GameOver gameType={gameType} startNewGame={startNewGame} score={score} opponentScore={opponentScore} loser={loser}/>
     }
 
     function startNewGame(gameType){
+        setGameType(gameType)
         ws.startGame(gameType)
         setGameOver(false)
         setPlaying(true) 
@@ -94,18 +98,22 @@ function WaitingRoom({setWS, startNewGame}) {
     )
 }
 
-function GameOver({startNewGame, score, opponentScore}) {
+function GameOver({startNewGame, score, opponentScore, loser, gameType}) {
+    let auth = localStorage.getItem('auth');
+    let userID = localStorage.getItem('userID');
     return (
         <div>
             <h3>GAME OVER</h3>
-            <h5>This is where it would say who won</h5>
+            {
+                gameType == "multi" && <h5>{loser == userID ? "You lost..." : "You won!"}</h5>
+            }
             <br/>
             <h7>{`Your score: ${score}`}</h7>
             <br/>
             { opponentScore != undefined && <h7>{`Opponent's score: ${opponentScore}`}</h7>}
             <Button onClick={() => startNewGame("single")}>Single-player</Button>
             {
-                localStorage.getItem('auth') != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
+                auth != null && <Button onClick={() => startNewGame("multi")}>Multi-player</Button>
             }
         </div>
     )
