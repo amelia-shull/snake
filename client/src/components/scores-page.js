@@ -14,7 +14,7 @@ export default function ScoresPage({setTabSelection}) {
             <div style={{width: "300px"}}>
                 <Card cardTheme="card-tertiary">
                     <CardHeader>
-                        Top 10 Players
+                        Leaderboard
                     </CardHeader>
                     <CardBody>
                         <GameScores/>

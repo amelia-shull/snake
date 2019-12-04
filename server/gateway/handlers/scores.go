@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 // ScoresHandler will handle POST requests to /scores to store the score in request
@@ -106,10 +108,10 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			}
 		}
 	} else {
-		// get the userID
 		var userID int
 		// get user id from the url path
-		id, err := strconv.Atoi(url[len("/scores/") : len("/scores/")+1])
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["userID"])
 		if err != nil {
 			http.Error(w, "Bad user id", http.StatusBadRequest)
 			return

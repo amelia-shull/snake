@@ -16,14 +16,14 @@ export function GameScores() {
 
     return (
         <div>
-            <ul>
+            <ol>
                 {top}
-            </ul>
+            </ol>
         </div>
     )
 
     async function getTopScore() {
-        const res = await axios.get(BASE_URL + 'scores/')
+        const res = await axios.get(BASE_URL + 'scores/?top=20')
         return res.data ? res.data.map((score, index) => <li key={index}>{formatTopPoints(score)}</li>) : <></>
     }
 }
