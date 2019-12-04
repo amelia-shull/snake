@@ -18,7 +18,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
             if (move) {
                 ws.sendMove(move)
             }
-        }, 250)
+        }, 299)
     }, [])
 
 
@@ -44,7 +44,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
     
     return (
         <div style={{width: "600px", height:"600px", backgroundColor: "220"}}>
-            Waiting for other player...
+            Waiting...
         </div>
     );
     
