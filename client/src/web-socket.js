@@ -11,11 +11,7 @@ export class WebSocketClient {
         this.updateGameState = () => {}
         this.ws.onmessage = event => {
             let data = event.data;
-            if (data.startsWith("Update:")) { // I don't remember why I did this testing something????
-                console.log(data)
-            } else {
-                this.updateGameState(data)
-            }
+            this.updateGameState(data)
         }
     }
 

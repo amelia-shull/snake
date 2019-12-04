@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"snake/server/gateway/sessions"
 	"snake/server/gateway/users"
@@ -42,8 +41,7 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 	score := &users.Score{}
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(score); err != nil {
-		log.Println(err)
-		http.Error(w, "Decoding failed", http.StatusBadRequest)
+		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
 
@@ -54,14 +52,12 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 	}
 	timeNow, err := time.Parse("2006-01-02T15:04:05Z", time.Now().Format(time.RFC3339))
 	if err != nil {
-		log.Println(err)
 		http.Error(w, "Error adding score", http.StatusInternalServerError)
 		return
 	}
 	score.Created = timeNow
 	score, err = ctx.UserStore.InsertScore(score)
 	if err != nil {
-		log.Println(err)
 		http.Error(w, "Can't insert to store", http.StatusBadRequest)
 		return
 	}
@@ -96,7 +92,6 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 		if topN == "" {
 			scores, err = ctx.UserStore.GetTopScoresUserName(10)
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -108,7 +103,6 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			}
 			scores, err = ctx.UserStore.GetTopScores(n)
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -131,7 +125,6 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return all scores by userID
 			scores, err = ctx.UserStore.GetAllScoresByUserID(userID)
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -144,7 +137,6 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return top n scores
 			scores, err = ctx.UserStore.GetTopNScoresByUserID(userID, n)
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}
@@ -157,7 +149,6 @@ func (ctx *HandlerContext) SpecificScoresHandler(w http.ResponseWriter, r *http.
 			// return 5 recent scores
 			scores, err = ctx.UserStore.GetNRecentScoresByUserID(userID, n)
 			if err != nil {
-				log.Println(err)
 				http.Error(w, "Error getting scores", http.StatusInternalServerError)
 				return
 			}

@@ -94,7 +94,7 @@ func (ctx *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Reques
 	dec := json.NewDecoder(r.Body)
 	// check that request body can be encoded into credentials struct
 	if err := dec.Decode(creds); err != nil {
-		http.Error(w, "Decoding failed", http.StatusUnsupportedMediaType)
+		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
 
@@ -130,7 +130,7 @@ func (ctx *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Reques
 	// don't test the error because if code ran to this point, the user should be valid
 	userJSON, err := json.Marshal(sessionState.User)
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusConflict)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
 	w.Write(userJSON)
 }
