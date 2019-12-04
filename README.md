@@ -1,11 +1,17 @@
 # Retro Snake Documentation
+
 INFO 441 Final Project
 
-## User stories
-Do we need these again?
+Amelia Shull & Kateka Seth
 
-## Architecture
-Insert diagram here
+## Our Site
+
+**API:** https://snakeapi.katekaseth.me
+
+**Client:** https://retrosnake.me
+
+## Architecture Diagram
+![Architecture Diagram](/diagrams/final_arch_diagram.png)
 
 ## Endpoints
 - `POST /scores`: adds user's score to database
@@ -33,6 +39,16 @@ Insert diagram here
     - `400`: Bad url, Bad number
     - `405`: Method must be GET
     - `500`: Error getting scores
+  - Request body:
+	``` Javascript
+	[
+		{
+			score: (score),
+			userID: (userID),
+			created: (datetime)
+		},
+	]
+	```
 
 - `GET /scores/{userID}`: gets all scores of specific player
   - Parameters:
@@ -43,8 +59,18 @@ Insert diagram here
     - `400`: Bad url, Bad number, Bad user id
     - `405`: Method must be GET
     - `500`: Error getting scores
+  - Request body:
+	``` Javascript
+	[
+		{
+			score: (score),
+			userID: (userID),
+			created: (datetime)
+		},
+	]
+	```
 
-- `POST /users`: creates new user accounts
+- `POST /users`: creates new user accounts and begins a new session
   - Request body:
 	``` Javascript
 	{
@@ -54,12 +80,14 @@ Insert diagram here
 	}
 	```
   - Response body:
-	```
+	``` Javascript
 	{
 		userID: (userID),
 		userName: (userName)
 	}
 	```
+  - Response headers:
+    - `Authorization`: bearer token for the session
   - Responses:
     - `201`: (Successfully creates user and begins new session)
     - `400`: Invalid new user
@@ -78,10 +106,13 @@ Insert diagram here
 	```
   - Response body:
 	``` Javascript
-
+	{
+		userID: (userID),
+		userName: (userName)
+	}
 	```
   - Response headers:
-    - `authorization`: auth token for the session
+    - `Authorization`: bearer token for the session
   - Responses:
     - `201`: (Session successfully started)
     - `401`: Invalid credentials
@@ -92,7 +123,7 @@ Insert diagram here
 
 - `DELETE /sessions/`: deletes the session
   - Request headers:
-    - `Authorization`: auth token for the session
+    - `Authorization`: bearer token for the session
   - Responses:
     - `200`: signed out
     - `403`: User not authenticated
@@ -143,8 +174,41 @@ The server sends the following data to the client:
 For a single player game, the `players` array will only contain one element, for multi-player it would contain two. The `body` array contains points representing the location of the player's snake, the 0 element being the head. The `food` field contains a single point representing where the food is located. 
 
 ## Database Schema
-Insert db schemas here
+
+The `users` table stores all registered users. We chose to only store username and not email because we would never contact the user.
+
+| users                                 |
+|---------------------------------------|
+| **`id`** `int`                        |
+| **`username`** `varchar(255), unique` |
+| **`passhash`** `varchar(128)`         |
+
+
+The `scores` table stores all scores of a registered user. The `scores.userID` links to `users.id` of the users table.
+
+| scores                          |
+|---------------------------------|
+| **`id`** `int`                  |
+| **`userId`** `int, foreign key` |
+| **`score`** `int`               |
 
 ## Docker Containers
-name of docker container for each component, the network address/port they are available in.
+- `snake-server`
+  - **Port:** 443
+  - **Docker Network:** server-net
+  - **Description:** This container is the main gateway for our API server.
 
+- `user-store`
+  - **Port:** 3306 (not published)
+  - **Docker Network:** server-net
+  - **Description:** This container is the SQL database which stores registered users and scores.
+
+- `redisServer`
+  - **Port:** 6379 (not published)
+  - **Docker Network:** server-net
+  - **Description:** This container is the redis store which contains user sessions.
+
+- `client`
+  - **Port:** 80, 443
+  - **Docker Network:** N/A
+  - **Description:** This container is our client-side react app.
