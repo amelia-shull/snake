@@ -15,10 +15,11 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
     useEffect(() => {
         setInterval(() => {
             let move = queue.shift();
+            console.log(move)
             if (move) {
                 ws.sendMove(move)
             }
-        }, 10)
+        }, 250)
     }, [])
 
 
