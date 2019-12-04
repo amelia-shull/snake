@@ -14,7 +14,7 @@ Amelia Shull & Kateka Seth
 > Welcome to Retro Snake. You can play single, or two-person snake games. Our game is a positive distraction for college students who need short breaks from long study hours. Our target audience is mainly students, though anyone who experiences boredom can benefit from our game. This game is a positive distraction and not a hindrance because of its simple nature. Users must be actively engaged to succeed in snake, but it’s not interesting enough for long gameplay. 
 
 ## Game Directions
-> Sign in or create an account to play multi-player and save scores. You don't need an account to play single player. When you start the game, your snake is red, opponent's is black, and the food is periwinkle. Use the arrow keys to move and eat the food to increase your score. But don't run into the walls, your opponent, or even yourself! Losing and winning isn't dependent on score, but rather if you or your opponent dies. Check the leaderboard on the scores tab to see the top scores. 
+> Sign in or create an account to play multi-player and save scores. You don't need an account to play single player. When you start the game, your snake is red, opponent's is black, and the food is periwinkle. Use the arrow keys to move, and eat the food to increase your score. But don't run into the walls, your opponent, or even yourself! Losing and winning isn't dependent on score, but rather if you or your opponent dies. Check the leaderboard on the scores tab to see the top scores. You can log out of your account on the profile tab. Have fun!
 
 ## Architecture Diagram
 ![Architecture Diagram](/diagrams/final_arch_diagram.png)
