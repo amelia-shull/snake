@@ -72,11 +72,11 @@ export function UserRecentScores() {
 
 function formatUserPoints(input) {
     let date = new Date(input.created)
-    let dashes = " ----------------------- "
-    return input.score + dashes + date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear()
+    let dashes = " -------------------- "
+    return input.score + dashes + date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear() + " @ " + date.getHours() + ":" + date.getMinutes()
 }
 
 function formatTopPoints(input) {
-    let dashes = " ----------------------- "
+    let dashes = " -------------------- "
     return input.score + dashes + input.userName
 }
