@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardBody } from './card';
 import { TabMenu, TabMenuItem, Tab } from './tabs';
 import GamePage from './game-page';
