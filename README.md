@@ -1,6 +1,12 @@
 # Retro Snake Documentation
 INFO 441 Final Project
 
+## User stories
+Do we need these again?
+
+## Architecture
+Insert diagram here
+
 ## Endpoints
 - `POST /scores`: adds user's score to database
   - Request body:
@@ -135,4 +141,10 @@ The server sends the following data to the client:
 }
 ```
 For a single player game, the `players` array will only contain one element, for multi-player it would contain two. The `body` array contains points representing the location of the player's snake, the 0 element being the head. The `food` field contains a single point representing where the food is located. 
+
+## Database Schema
+Insert db schemas here
+
+## Docker Containers
+name of docker container for each component, the network address/port they are available in.
 
