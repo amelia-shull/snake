@@ -39,7 +39,7 @@ func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request)
 	score := &users.Score{}
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(score); err != nil {
-		http.Error(w, "Decoding failed", http.StatusBadRequest)
+		http.Error(w, "Decoding failed", http.StatusInternalServerError)
 		return
 	}
 

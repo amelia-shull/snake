@@ -2,7 +2,7 @@
 INFO 441 Final Project
 
 ## Endpoints
-- `POST /scores` : adds user's score to database
+- `POST /scores`: adds user's score to database
   - Request body:
 	``` Javascript
 	{
@@ -10,20 +10,35 @@ INFO 441 Final Project
 		userID: (userID)
 	}
 	```
-	- Responses:
-  	- `200`: score added successfully
-  	- `400`: Decoding failed
-  	- `401`: User not authenticated, User not authorized
-  	- 
+	
+  - Responses:
+    - `200`: score added successfully
+    - `400`: Can't insert to store
+    - `401`: User not authenticated, User not authorized
+    - `405`: Method must be POST
+    - `415`: Request body must be in JSON, Request is nil
+    - `500`: Error adding score, Decoding failed
 
-- `GET /scores/` : gets top 10 (default) scores of all players
-  - `?top=n` : encodes the top n scores
+- `GET /scores/`: gets top 10 (default) scores of all players
+  - Parameters:
+    - `?top=n`: encodes the top n scores
+  - Responses:
+    - `200`: (Successfully returns scores)
+    - `400`: Bad url, Bad number
+    - `405`: Method must be GET
+    - `500`: Error getting scores
 
-- `GET /scores/{userID}` : gets all scores of specific player
-  - `?top=n` : encodes the top n scores
-  - `?recent=n` : encodes n most recent scores
+- `GET /scores/{userID}`: gets all scores of specific player
+  - Parameters:
+    - `?top=n`: encodes the top n scores
+    - `?recent=n`: encodes n most recent scores
+  - Responses:
+    - `200`: (Successfully returns scores)
+    - `400`: Bad url, Bad number, Bad user id
+    - `405`: Method must be GET
+    - `500`: Error getting scores
 
-- `POST /users` : creates new user accounts
+- `POST /users`: creates new user accounts
   - Request body:
 	``` Javascript
 	{
@@ -39,12 +54,48 @@ INFO 441 Final Project
 		userName: (userName)
 	}
 	```
+  - Responses:
+    - `201`: (Successfully creates user and begins new session)
+    - `400`: Invalid new user
+    - `405`: Method must be POST
+    - `409`: Can't insert to store, Error beginning a session
+    - `415`: Request body must be in JSON, Request is nil
+    - `500`: Decoding failed, Internal server error
 
-- `/sessions`
+- `POST /sessions`: begins a new session for user
+  - Request body:
+	``` Javascript
+	{
+		password: (password),
+		userName: (userName)  
+	}
+	```
+  - Response body:
+	``` Javascript
 
-- `/sessions/`
+	```
+  - Response headers:
+    - `authorization`: auth token for the session
+  - Responses:
+    - `201`: (Session successfully started)
+    - `401`: Invalid credentials
+    - `405`: Method must be POST
+    - `409`: Error beginning a session
+    - `415`: Request body not in JSON, Request is nil
+    - `500`: Decoding failed, Internal server error
 
-- `/`
+- `DELETE /sessions/`: deletes the session
+  - Request headers:
+    - `Authorization`: auth token for the session
+  - Responses:
+    - `200`: signed out
+    - `403`: User not authenticated
+    - `405`: Method must be DELETE
+    - `409`: Error ending session
+
+- `/`: upgrades connection to websocket
+  - Responses:
+    - `500`: Cannot upgrade to websocket, Cannot read json
 
 ## WebSocket Messages
 Websocket will connect when the client joins the waiting room (game tab). The client sends the `auth` token recieved from the `/session` endpoint. 
