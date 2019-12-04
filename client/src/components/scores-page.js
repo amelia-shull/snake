@@ -11,7 +11,7 @@ const {
 export default function ScoresPage({setTabSelection}) {
     return (
         <div style={{display: "flex", justifyContent: "space-evenly"}}>
-            <div style={{width: "300px"}}>
+            <div style={{width: "400px"}}>
                 <Card cardTheme="card-tertiary">
                     <CardHeader>
                         Leaderboard

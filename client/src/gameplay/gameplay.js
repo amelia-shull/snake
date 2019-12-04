@@ -18,7 +18,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
             if (move) {
                 ws.sendMove(move)
             }
-        }, 10)
+        }, 299)
     }, [])
 
 
@@ -44,7 +44,7 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
     
     return (
         <div style={{width: "600px", height:"600px", backgroundColor: "220"}}>
-            Waiting for other player...
+            Waiting...
         </div>
     );
     
@@ -86,16 +86,12 @@ export function Gameplay({ws, setGameOver, setPlaying, setScore, score, opponent
     function keyPressed(p5) {
         if (p5.keyCode === p5.LEFT_ARROW) {
             queue.push("left")
-            //ws.sendMove("left")
         } else if (p5.keyCode === p5.RIGHT_ARROW) {
             queue.push("right")
-            //ws.sendMove("right")
         } else if (p5.keyCode === p5.UP_ARROW) {
             queue.push("up")
-            //ws.sendMove("up")
         } else if (p5.keyCode === p5.DOWN_ARROW) {
             queue.push("down")
-            //ws.sendMove("down")
         }
         setQueue(queue)
     }
