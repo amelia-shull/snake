@@ -45,6 +45,8 @@ Amelia Shull & Kateka Seth
     - `400`: Bad url, Bad number
     - `405`: Method must be GET
     - `500`: Error getting scores
+  - Request origin:
+    - Must be from https://retrosnake.me
   - Request body:
 	``` Javascript
 	[
@@ -137,6 +139,8 @@ Amelia Shull & Kateka Seth
     - `409`: Error ending session
 
 - `/`: upgrades connection to websocket
+  - Request origin:
+    - Must be from https://retrosnake.me
   - Responses:
     - `500`: Cannot upgrade to websocket, Cannot read json
 
