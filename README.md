@@ -32,7 +32,7 @@ Amelia Shull & Kateka Seth
   - Responses:
     - `200`: score added successfully
     - `400`: Can't insert to store
-    - `401`: User not authenticated, User not authorized
+    - `401`: User not authenticated, User not authorized, Origin not authorized
     - `405`: Method must be POST
     - `415`: Request body must be in JSON, Request is nil
     - `500`: Error adding score, Decoding failed
