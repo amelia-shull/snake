@@ -15,6 +15,10 @@ import (
 // ScoresHandler will handle POST requests to /scores to store the score in request
 // body.
 func (ctx *HandlerContext) ScoresHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Origin") != "https://retrosnake.me" {
+		http.Error(w, "Origin not authorized", http.StatusUnauthorized)
+		return
+	}
 	if r.Method != "POST" && r.Method != "GET" {
 		http.Error(w, "Method must be POST", http.StatusMethodNotAllowed)
 		return
